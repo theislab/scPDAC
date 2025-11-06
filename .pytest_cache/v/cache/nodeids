@@ -1,0 +1,7 @@
+[
+  "tests/test_basic.py::test_elaborate_example_adata_only_simple[<lambda>-None-1-1-max=6.70]",
+  "tests/test_basic.py::test_elaborate_example_adata_only_simple[<lambda>-None-100-1-mean=]",
+  "tests/test_basic.py::test_elaborate_example_adata_only_simple[<lambda>-scaled-100-1-mean=0.]",
+  "tests/test_basic.py::test_example",
+  "tests/test_basic.py::test_package_has_version"
+]

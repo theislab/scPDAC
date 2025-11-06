@@ -1,0 +1,43 @@
+{
+  "template": "https://github.com/scverse/cookiecutter-scverse",
+  "commit": "760cebbbaa476481fe9cbfd6b0e237dc858b5f3c",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "scPDAC",
+      "package_name": "scpdac",
+      "project_description": "A very interesting piece of code",
+      "author_full_name": "Daniele Lucarelli",
+      "author_email": "daniele.lucarelli@tum.de",
+      "github_user": "MDLDan",
+      "github_repo": "scPDAC",
+      "license": "MIT License",
+      "ide_integration": true,
+      "_copy_without_render": [
+        ".github/workflows/build.yaml",
+        ".github/workflows/test.yaml",
+        "docs/_templates/autosummary/**.rst"
+      ],
+      "_exclude_on_template_update": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "docs/api.md",
+        "docs/index.md",
+        "docs/notebooks/example.ipynb",
+        "docs/references.bib",
+        "docs/references.md",
+        "src/**",
+        "tests/**"
+      ],
+      "_render_devdocs": false,
+      "_jinja2_env_vars": {
+        "lstrip_blocks": true,
+        "trim_blocks": true
+      },
+      "_template": "https://github.com/scverse/cookiecutter-scverse",
+      "_commit": "760cebbbaa476481fe9cbfd6b0e237dc858b5f3c"
+    }
+  },
+  "directory": null
+}
