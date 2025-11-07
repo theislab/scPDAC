@@ -1,1 +1,1 @@
-from .basic import basic_preproc, elaborate_example
+from .binning import _bin_data, slice_and_bin

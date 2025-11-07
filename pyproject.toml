@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
 [project]
-name = "scPDAC"
+name = "scpdac"
 version = "0.0.1"
 description = "A very interesting piece of code"
 readme = "README.md"
@@ -24,6 +24,8 @@ classifiers = [
 ]
 dependencies = [
   "anndata",
+  "scanpy",
+  "scvi-tools",
   # for debug logging (referenced from the issue template)
   "session-info2",
 ]
@@ -56,6 +58,11 @@ optional-dependencies.test = [
 urls.Documentation = "https://scPDAC.readthedocs.io/"
 urls.Homepage = "https://github.com/MDLDan/scPDAC"
 urls.Source = "https://github.com/MDLDan/scPDAC"
+
+[tool.hatch.build]
+include = [
+  "src/scpdac/models/*.pt",
+]
 
 [tool.hatch.envs.default]
 installer = "uv"
@@ -91,6 +98,7 @@ matrix.deps.env-vars = [
 line-length = 120
 src = [ "src" ]
 extend-include = [ "*.ipynb" ]
+exclude = [ "tests/**" ]
 
 format.docstring-code-format = true
 
