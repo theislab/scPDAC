@@ -2,8 +2,22 @@ from __future__ import annotations
 
 from importlib.resources import as_file, files
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-__all__ = ["list_models", "available_models", "models_dir", "model_path", "load_scanvi_model"]
+if TYPE_CHECKING:
+    import scarches as sca
+
+__all__ = [
+    "list_models",
+    "available_models",
+    "models_dir",
+    "model_path",
+    "load_scanvi_model",
+    "classifier_dir",
+    "load_classifier_checkpoints",
+]
+
+_CLASSIFIER_FILES = {"root": "root.pt", "malignant": "malignant.pt", "non_malignant": "nonmalignant.pt"}
 
 
 def _scanvi_root() -> Path | None:
@@ -69,13 +83,63 @@ def model_path(*parts: str) -> Path | None:
     return p if p.exists() else None
 
 
-def load_scanvi_model(alias: str, *, adata):
+def load_scanvi_model(alias: str, *, adata, freeze_dropout: bool = True) -> sca.models.SCANVI:
     """Load a packaged ScanVI model by alias using scvi-tools' SCANVI.load."""
+    import scarches as sca
+
     if not _INDEX:
         raise RuntimeError("No ScanVI models found in package resources.")
     key = _alias(alias)
     if key not in _INDEX:
         raise KeyError(f"Unknown model alias '{alias}'. Available: {sorted(_INDEX.keys())}")
-    from scvi.model import SCANVI
 
-    return SCANVI.load(_INDEX[key], adata=adata)
+    return sca.models.SCANVI.load_query_data(
+        adata=adata, reference_model=str(_INDEX[key]), freeze_dropout=freeze_dropout
+    )
+
+
+def classifier_dir(species: str) -> Path | None:
+    """Return the packaged classifier directory for a species, if present."""
+    res = files("scpdac").joinpath("models", "classifier", species)
+    if not res.exists():
+        return None
+    with as_file(res) as p:
+        return Path(p)
+
+
+def load_classifier_checkpoints(species: str, map_location: str = "cpu") -> dict[str, dict]:
+    """Load the three hierarchical-classifier checkpoints for a species.
+
+    Parameters
+    ----------
+    species
+        ``"human"`` or ``"mouse"``.
+    map_location
+        Torch ``map_location`` for :func:`torch.load`.
+
+    Returns
+    -------
+    Mapping ``{"root", "malignant", "non_malignant"}`` to checkpoint dicts
+    (each holding ``state_dict``, ``genes``, ``classes``, ...).
+
+    Raises
+    ------
+    FileNotFoundError
+        If the species directory or any of the three checkpoints is missing.
+    """
+    import torch
+
+    root = classifier_dir(species)
+    if root is None:
+        raise FileNotFoundError(
+            f"No classifier checkpoints for species {species!r}. "
+            "Train them with scripts/train_classifier.py and place them under "
+            f"src/scpdac/models/classifier/{species}/."
+        )
+    ckpts: dict[str, dict] = {}
+    for key, fname in _CLASSIFIER_FILES.items():
+        path = root / fname
+        if not path.exists():
+            raise FileNotFoundError(f"Missing classifier checkpoint: {path}")
+        ckpts[key] = torch.load(path, map_location=map_location, weights_only=False)
+    return ckpts
