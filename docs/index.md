@@ -36,7 +36,7 @@ You need Python 3.11 or newer. If you don't have Python, we recommend [uv][].
 Install the latest development version:
 
 ```bash
-pip install git+https://github.com/MDLDan/scPDAC.git@main
+pip install scpdac
 ```
 
 ## Where to go next
