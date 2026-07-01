@@ -2,10 +2,20 @@
 .DS_Store
 *~
 buck-out/
+.ipynb_checkpoints/
 
-# Compiled files
-.venv/
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
 .*cache/
 
 # Distribution / packaging
@@ -18,4 +28,7 @@ __pycache__/
 
 # docs
 /docs/generated/
-/docs/_build/
+/docs/_build*/
+
+#logs
+/scripts/slurm/logs/
