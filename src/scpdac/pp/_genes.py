@@ -1,3 +1,21 @@
+"""Manually curated species-specific gene lists and gene-alignment helpers.
+
+The ``HUMAN_MANUAL_GENES`` and ``MOUSE_MANUAL_GENES`` lists below are the
+intersected, manually curated marker genes shared by the human and mouse PDAC
+atlases. They were derived by intersecting the per-atlas ``Manual_Genes`` /
+``manual_gene`` flags and harmonising the mouse symbols to title-case
+(e.g. ``"IER3"`` -> ``"Ier3"``); see ``scripts``/the project notebooks for the
+original extraction logic.
+"""
+
+from __future__ import annotations
+
+import warnings
+
+import numpy as np
+from anndata import AnnData
+from scipy.sparse import csr_matrix, issparse
+
 HUMAN_MANUAL_GENES = [
     "IER3",
     "MAFB",
@@ -4466,3 +4484,112 @@ MOUSE_MANUAL_GENES = [
     "Pnlip",
     "Tacstd2",
 ]
+
+
+def get_genes(species: str) -> list[str]:
+    """Return the manually curated gene list for a species.
+
+    Parameters
+    ----------
+    species
+        Either ``"human"`` or ``"mouse"``.
+
+    Returns
+    -------
+    The species-specific list of manually curated gene symbols.
+
+    Raises
+    ------
+    ValueError
+        If ``species`` is not ``"human"`` or ``"mouse"``.
+    """
+    if species == "human":
+        return HUMAN_MANUAL_GENES
+    if species == "mouse":
+        return MOUSE_MANUAL_GENES
+    raise ValueError(f"Unknown species: {species!r}. Expected 'human' or 'mouse'.")
+
+
+def align_to_genes(
+    adata: AnnData,
+    genes: list[str],
+    *,
+    missing: str = "error",
+    layer: str | None = None,
+) -> AnnData:
+    """Subset/reindex an :class:`~anndata.AnnData` to a fixed gene panel and order.
+
+    Ensures the returned object's ``var_names`` exactly match ``genes`` (in the
+    given order), which is required so that model inputs always align with the
+    feature order the packaged models were trained on.
+
+    Parameters
+    ----------
+    adata
+        The input object to align. Not modified in place.
+    genes
+        The target gene panel, in the desired order.
+    missing
+        How to handle genes in ``genes`` that are absent from ``adata``:
+        ``"error"`` raises a :class:`ValueError` listing the missing genes;
+        ``"zeros"`` inserts all-zero columns for them and emits a warning with
+        the count of imputed genes.
+    layer
+        If given, the named layer is realigned alongside ``X`` (and any
+        zero-imputed columns are zero in that layer too).
+
+    Returns
+    -------
+    A new :class:`~anndata.AnnData` whose ``var_names`` equal ``genes``.
+
+    Raises
+    ------
+    ValueError
+        If ``missing="error"`` and some requested genes are absent, or if
+        ``missing`` is not a recognised option.
+    """
+    if missing not in ("error", "zeros"):
+        raise ValueError(f"Unknown 'missing' option: {missing!r}. Expected 'error' or 'zeros'.")
+
+    present_mask = np.isin(genes, adata.var_names)
+    missing_genes = [g for g, ok in zip(genes, present_mask, strict=True) if not ok]
+
+    if missing_genes:
+        if missing == "error":
+            raise ValueError(
+                f"{len(missing_genes)} requested gene(s) missing from input AnnData, "
+                f"e.g. {missing_genes[:10]}. Pass missing='zeros' to impute them as zeros."
+            )
+        warnings.warn(
+            f"{len(missing_genes)} of {len(genes)} genes missing from input; imputing them as zero-expression columns.",
+            stacklevel=2,
+        )
+
+    present_genes = [g for g in genes if g in set(adata.var_names)]
+    out = adata[:, present_genes].copy()
+
+    if not missing_genes:
+        return out[:, genes].copy()
+
+    n_obs = out.n_obs
+    col_index = {g: i for i, g in enumerate(out.var_names)}
+    sparse = issparse(out.X)
+
+    def _expand(mat):
+        if sparse:
+            mat = mat.tocsc()
+        full = np.zeros((n_obs, len(genes)), dtype=np.asarray(out.X[:1].todense() if sparse else out.X[:1]).dtype)
+        for j, g in enumerate(genes):
+            if g in col_index:
+                col = mat[:, col_index[g]]
+                full[:, j] = col.toarray().ravel() if issparse(col) else np.asarray(col).ravel()
+        return csr_matrix(full) if sparse else full
+
+    expanded = AnnData(
+        X=_expand(out.X),
+        obs=out.obs.copy(),
+    )
+    expanded.var_names = list(genes)
+    if layer is not None and layer in out.layers:
+        expanded.layers[layer] = _expand(out.layers[layer])
+    return expanded

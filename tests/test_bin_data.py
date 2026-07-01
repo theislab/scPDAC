@@ -26,8 +26,8 @@ def test_sparse_input_preserved_and_binned():
     assert issparse(binned)
     assert binned.shape == original.shape
 
-    orig_nz = set(zip(*original.nonzero()))
-    binned_nz = set(zip(*binned.nonzero()))
+    orig_nz = set(zip(*original.nonzero(), strict=True))
+    binned_nz = set(zip(*binned.nonzero(), strict=True))
     assert orig_nz == binned_nz
     assert np.issubdtype(binned.data.dtype, np.integer)
     assert binned.data.min() >= 0
@@ -109,6 +109,15 @@ def test_bin_values_respect_range_dense():
     assert out.max() <= 4
 
 
+def test_bin_data_public_wrapper_defaults_to_binned_data():
+    X = np.array([[0.0, 1.0, 2.0, 3.0]])
+    ad = AnnData(X=X)
+    out = scpdac.pp.bin_data(ad, n_bins=4)
+    assert out is ad
+    assert "binned_data" in ad.layers
+    assert "bin_edges" in ad.obsm
+
+
 def test_slice_and_bin_filters_genes_and_returns_new(monkeypatch):
     X = np.array(
         [
@@ -119,8 +128,8 @@ def test_slice_and_bin_filters_genes_and_returns_new(monkeypatch):
     var_names = np.array(["G1", "G2", "G3", "G4"])
     ad = AnnData(X=X.copy())
     ad.var_names = var_names
-    monkeypatch.setattr(scpdac.pp.preprocess, "MOUSE_MANUAL_GENES", ["G1", "G3"], raising=False)
-    monkeypatch.setattr(scpdac.pp.preprocess, "HUMAN_MANUAL_GENES", ["HX"], raising=False)
+    monkeypatch.setattr(scpdac.pp._genes, "MOUSE_MANUAL_GENES", ["G1", "G3"], raising=False)
+    monkeypatch.setattr(scpdac.pp._genes, "HUMAN_MANUAL_GENES", ["HX"], raising=False)
 
     out = scpdac.pp.slice_and_bin(ad, species="mouse", binning=3)
 
@@ -128,7 +137,6 @@ def test_slice_and_bin_filters_genes_and_returns_new(monkeypatch):
     assert list(ad.var_names) == list(var_names)
     assert isinstance(out, AnnData)
     assert list(out.var_names) == ["G1", "G3"]
-    assert "binned_data" in out.layers or "binned" in out.layers or "binned_dense" in out.layers
     assert "binned_data" in out.layers
     assert "bin_edges" in out.obsm
     assert out.obsm["bin_edges"].shape[0] == out.n_obs

@@ -1,29 +1,41 @@
-from typing import TypeVar
+"""Per-cell quantile binning of expression values into discrete bins."""
+
+from __future__ import annotations
 
 import numpy as np
 from anndata import AnnData
 from scipy.sparse import csr_matrix, issparse
 
-from .variables import HUMAN_MANUAL_GENES, MOUSE_MANUAL_GENES
-
-MuData = TypeVar("MuData")
-SpatialData = TypeVar("SpatialData")
-ScverseDataStructures = AnnData | MuData | SpatialData
+from . import _genes
 
 
-def _bin_data(adata, binning, key_to_process=None):
-    """
-    Bins numerical data into discrete categories based on quantiles.
+def _bin_data(
+    adata: AnnData,
+    binning: int,
+    key_to_process: str | None = None,
+    result_binned_key: str = "binned_data",
+) -> None:
+    """Bin numerical expression data into discrete categories based on per-cell quantiles.
+
+    The binned matrix is written to ``adata.layers[result_binned_key]`` and the
+    per-cell bin edges to ``adata.obsm["bin_edges"]``. Operates in place and
+    keeps sparse inputs sparse / dense inputs dense.
 
     Parameters
     ----------
-        adata (AnnData): The input data object.
-        binning (int): Number of bins (must be an integer).
-        key_to_process (str): Key in `adata.layers` to process.
+    adata
+        The input data object (modified in place).
+    binning
+        Number of bins (must be an integer).
+    key_to_process
+        Key in ``adata.layers`` to process; if ``None``, ``adata.X`` is used.
+    result_binned_key
+        Name of the output layer that will hold the binned matrix.
 
     Raises
     ------
-        ValueError: If `binning` is not an integer or data contains negative values.
+    ValueError
+        If ``binning`` is not an integer or (dense) data contains negative values.
     """
     if not isinstance(binning, int):
         raise ValueError(f"Binning must be an integer, but got {binning}.")
@@ -77,7 +89,7 @@ def _bin_data(adata, binning, key_to_process=None):
             shape=(n_obs, n_vars),
         )
 
-        adata.layers["binned_data"] = binned_csr
+        adata.layers[result_binned_key] = binned_csr
         adata.obsm["bin_edges"] = np.stack(bin_edges)
         return
 
@@ -104,41 +116,63 @@ def _bin_data(adata, binning, key_to_process=None):
         binned_rows.append(binned_row)
         bin_edges.append(np.concatenate([[0], bins]))
 
-    adata.layers["binned_data"] = np.stack(binned_rows)
+    adata.layers[result_binned_key] = np.stack(binned_rows)
     adata.obsm["bin_edges"] = np.stack(bin_edges)
 
 
-def slice_and_bin(adata: AnnData, species: str, binning: int, layer_key: str) -> AnnData:
-    """
-    Slice to species-specific manual genes and bin the specified layer.
+def bin_data(adata: AnnData, n_bins: int = 50, layer: str | None = None) -> AnnData:
+    """Discretize expression values into ``n_bins`` per-cell quantile bins.
+
+    Thin, user-facing wrapper around the internal ``_bin_data`` routine. Safely
+    handles dense arrays and sparse (``csr``/``csc``) matrices. The binned matrix is written
+    to ``adata.layers["binned_data"]`` and bin edges to ``adata.obsm["bin_edges"]``.
 
     Parameters
     ----------
-    adata : AnnData
-        The input AnnData object.
-    species : str
-        Species name ('mouse' or 'human').
-    binning : int
-        Number of bins for binning.
-    layer_key : str
-        Key in `adata.layers` to apply binning on.
+    adata
+        The input object (modified in place).
+    n_bins
+        Number of bins. Defaults to 50, matching the packaged SCANVI models.
+    layer
+        Layer to bin; if ``None``, ``adata.X`` is used.
 
     Returns
     -------
-    AnnData
-        Processed AnnData with sliced genes and binned data.
+    The same ``adata``, with the binned layer attached (returned for chaining).
+    """
+    _bin_data(adata, binning=n_bins, key_to_process=layer, result_binned_key="binned_data")
+    return adata
+
+
+def slice_and_bin(
+    adata: AnnData,
+    species: str,
+    binning: int = 50,
+    layer_key: str | None = None,
+) -> AnnData:
+    """Subset to species-specific manual genes and bin the chosen layer.
+
+    Parameters
+    ----------
+    adata
+        The input AnnData object (not modified in place).
+    species
+        Species name (``"mouse"`` or ``"human"``).
+    binning
+        Number of bins for binning. Defaults to 50.
+    layer_key
+        Key in ``adata.layers`` to bin; if ``None``, ``adata.X`` is used.
+
+    Returns
+    -------
+    A new AnnData with sliced genes and a ``"binned_data"`` layer.
 
     Raises
     ------
     ValueError
         If the species is not recognized.
     """
-    if species not in ["mouse", "human"]:
-        raise ValueError(f"Unknown species: {species}")
-
-    _adata = adata.copy()
-    genes = MOUSE_MANUAL_GENES if species == "mouse" else HUMAN_MANUAL_GENES
-    _adata = _adata[:, _adata.var_names.isin(genes)].copy()
-    _bin_data(adata=_adata, binning=binning, key_to_process=layer_key)
-
+    genes = sorted(_genes.get_genes(species))
+    _adata = _genes.align_to_genes(adata, genes, missing="zeros", layer=layer_key)
+    _bin_data(adata=_adata, binning=binning, key_to_process=layer_key, result_binned_key="binned_data")
     return _adata
