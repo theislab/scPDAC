@@ -34,6 +34,16 @@ templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
 needs_sphinx = "4.0"
 
+# ``load_scanvi_model`` is annotated with ``sca.models.SCANVI`` (scArches, imported
+# lazily inside the function) and ``sphinx_autodoc_typehints`` also probes an
+# ``anndata.read`` symbol that recent anndata releases dropped. Neither is a
+# documentation problem, so silence the two benign type-hint categories rather than
+# failing the ``-W`` build over them.
+suppress_warnings = [
+    "sphinx_autodoc_typehints.forward_reference",
+    "sphinx_autodoc_typehints.guarded_import",
+]
+
 html_context = {
     "display_github": True,  # Integrate GitHub
     "github_user": "MDLDan",
@@ -97,6 +107,9 @@ intersphinx_mapping = {
     "anndata": ("https://anndata.readthedocs.io/en/stable/", None),
     "scanpy": ("https://scanpy.readthedocs.io/en/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
+    "pandas": ("https://pandas.pydata.org/docs/", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
 # List of patterns, relative to source directory, that match files and
@@ -129,4 +142,18 @@ nitpick_ignore = [
     # If building the documentation fails because of a missing link that is outside your control,
     # you can add an exception to this list.
     #     ("py:class", "igraph.Graph"),
+]
+
+# Inherited ``torch.nn.Module`` members pull in many cross-references to torch
+# internals (and abbreviated names) that are not in any public inventory. These
+# come from third-party docstrings, so ignore them rather than failing the build.
+nitpick_ignore_regex = [
+    (r"py:.*", r"torch\..*"),
+    (r"py:.*", r"(nn|torch\.nn)\.Module.*"),
+    (r"py:func", r"register_module_.*"),
+    (r"py:class", r"(Dropout|BatchNorm)"),
+    (r"py:attr", r"(grad_output|dtype|device|non_blocking|requires_grad|dst_type)"),
+    (r"py:class", r"pandas\..*"),
+    (r"py:meth", r"scvi\..*"),
+    (r"std:.*", r"locally-disable-grad-doc"),
 ]
