@@ -8,17 +8,25 @@ panel — **not** binned data):
 2. malignant      — Level-3 labels among malignant cells
 3. nonmalignant   — Level-3 labels among non-malignant cells
 
-A stratified held-out **test** split is carved out up front; the three models
-never see it during training. After training, the script evaluates every model
-on that held-out test set and writes accuracy bar plots + a metrics table:
+The **test** set is not a random split: the two datasets (``adata.obs['Dataset']``)
+with the fewest cells are held out entirely, so evaluation measures transfer to
+studies the models never saw. The three models never see those cells during
+training. After training, the script evaluates every model on that held-out set
+and writes per-class F1 bar plots + a metrics table:
 
-* ``accuracy_root.png``                 — Malignant vs Non-Malignant
-* ``accuracy_malignant_level3.png``     — Level-3 within malignant cells
-* ``accuracy_nonmalignant_level3.png``  — Level-3 within non-malignant cells
-* ``accuracy_combined_level3.png``      — full hierarchy, end-to-end Level-3
+* ``f1_root.png``                 — Malignant vs Non-Malignant
+* ``f1_malignant_level3.png``     — Level-3 within malignant cells
+* ``f1_nonmalignant_level3.png``  — Level-3 within non-malignant cells
+* ``f1_combined_level3.png``      — full hierarchy, end-to-end Level-3
+
+The datasets chosen as the hold-out are recorded in ``test_split.csv`` (one row
+per dataset, with its cell count and train/test role) and in every checkpoint.
+Every held-out call is also dumped to ``predictions.csv``, from which
+``scripts/plot_performance.py`` rebuilds the figures without retraining.
 
 Each model is saved as a ``.pt`` checkpoint holding ``state_dict``, the gene
-order, the class list, and the architecture, so inference can realign features.
+order, the class list, the architecture, and the held-out dataset names, so
+inference can realign features.
 
 Example
 -------
@@ -37,10 +45,12 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import torch
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from torch import nn
+
+# Plot code lives next door so the figures can be rebuilt from predictions.csv
+# without retraining; this script and `plot_performance.py` share it.
+from plot_performance import TASKS, plot_f1_bars
 
 from scpdac.tl import MLP, derive_malignant_mask
 from scpdac.tl._data import make_loader, predict_indices
@@ -74,15 +84,33 @@ def ensure_log1p_norm(adata: ad.AnnData, layer: str, counts_layer: str) -> None:
     adata.layers[layer] = tmp.X
 
 
-def stratified_split(y: np.ndarray, test_frac: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
-    """Return ``(train_idx, test_idx)`` stratified on ``y`` where possible.
+def dataset_holdout_split(
+    datasets: np.ndarray, n_test: int, explicit: list[str] | None = None
+) -> tuple[np.ndarray, np.ndarray, list[str], pd.Series]:
+    """Hold out whole datasets, returning ``(train_idx, test_idx, test_names, counts)``.
 
-    Falls back to a plain random split if any class is too small to stratify.
+    Unless ``explicit`` names the datasets to hold out, the ``n_test`` datasets
+    with the **fewest cells** become the test set. Ties are broken by name so the
+    choice is reproducible. Splitting on ``Dataset`` rather than at random means
+    no study contributes cells to both sides, so the reported scores describe
+    transfer to an unseen study rather than in-distribution performance.
     """
-    idx = np.arange(len(y))
-    stratify = y if pd.Series(y).value_counts().min() >= 2 else None
-    train_idx, test_idx = train_test_split(idx, test_size=test_frac, random_state=seed, stratify=stratify)
-    return train_idx, test_idx
+    counts = pd.Series(datasets).value_counts()
+    if explicit:
+        missing = sorted(set(explicit) - set(counts.index))
+        if missing:
+            raise ValueError(f"--test-datasets not found in the atlas: {missing}")
+        test_names = list(explicit)
+    else:
+        if n_test >= len(counts):
+            raise ValueError(f"--n-test-datasets={n_test} but the atlas only has {len(counts)} datasets")
+        # Sort by (count, name) so equal-sized datasets order deterministically.
+        test_names = list(counts.sort_index().sort_values(kind="stable").index[:n_test])
+
+    is_test = np.isin(datasets, test_names)
+    if not is_test.any():
+        raise ValueError(f"held-out datasets {test_names} select no cells")
+    return np.flatnonzero(~is_test), np.flatnonzero(is_test), test_names, counts
 
 
 def train_mlp(
@@ -96,6 +124,7 @@ def train_mlp(
     lr: float,
     val_frac: float,
     device: str,
+    seed: int = 0,
     num_workers: int = 0,
 ) -> tuple[dict, MLP]:
     """Train an :class:`~scpdac.tl.MLP` and return ``(checkpoint, best_model)``.
@@ -109,7 +138,7 @@ def train_mlp(
     y_idx = enc.transform(y)
 
     n = len(y_idx)
-    perm = np.random.RandomState(0).permutation(n)
+    perm = np.random.RandomState(seed).permutation(n)
     n_val = max(1, int(n * val_frac))
     val_idx, train_idx = perm[:n_val], perm[n_val:]
 
@@ -157,47 +186,8 @@ def mlp_predict(model: MLP, x, classes: list[str], device: str) -> np.ndarray:
     return np.asarray(classes, dtype=object)[idx] if len(idx) else np.empty(0, dtype=object)
 
 
-def plot_accuracy_bars(y_true: np.ndarray, y_pred: np.ndarray, title: str, path: Path) -> dict[str, float]:
-    """Save a horizontal per-class accuracy (recall) bar plot and return summary metrics."""
-    import matplotlib.pyplot as plt
-
-    classes = sorted(set(map(str, y_true)) | set(map(str, y_pred)))
-    rec = recall_score(y_true, y_pred, labels=classes, average=None, zero_division=0)
-    order = np.argsort(rec)
-    classes_sorted = [classes[i] for i in order]
-    rec_sorted = rec[order]
-
-    overall = accuracy_score(y_true, y_pred)
-    macro_f1 = f1_score(y_true, y_pred, average="macro", zero_division=0)
-
-    fig, ax = plt.subplots(figsize=(8.5, max(2.5, 0.42 * len(classes) + 1.2)))
-    colors = plt.cm.viridis(np.clip(rec_sorted, 0, 1))
-    ax.barh(range(len(classes_sorted)), rec_sorted, color=colors, edgecolor="white", height=0.78)
-    ax.set_yticks(range(len(classes_sorted)))
-    ax.set_yticklabels(classes_sorted)
-    ax.set_xlim(0, 1)
-    ax.set_xlabel("Per-class accuracy (recall)")
-    ax.set_title(f"{title}\noverall acc = {overall:.3f}   macro-F1 = {macro_f1:.3f}", fontsize=11)
-    for i, v in enumerate(rec_sorted):
-        ax.text(min(v + 0.012, 0.98), i, f"{v:.2f}", va="center", ha="left", fontsize=8, color="#222")
-    ax.grid(axis="x", alpha=0.3, linestyle="--")
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout()
-    fig.savefig(path, dpi=150)
-    plt.close(fig)
-    print(f"  wrote {path}  (acc={overall:.3f}, macro-F1={macro_f1:.3f})")
-
-    return {
-        "accuracy": overall,
-        "macro_f1": macro_f1,
-        "macro_precision": precision_score(y_true, y_pred, average="macro", zero_division=0),
-        "macro_recall": recall_score(y_true, y_pred, average="macro", zero_division=0),
-        "n_cells": int(len(y_true)),
-    }
-
-
 def main() -> None:
-    """Parse CLI args, train the three classifiers, and evaluate on a held-out split."""
+    """Parse CLI args, train the three classifiers, and evaluate on the held-out datasets."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--species", choices=["human", "mouse"], required=True)
     parser.add_argument("--atlas", required=True)
@@ -206,12 +196,16 @@ def main() -> None:
     parser.add_argument("--log1p-layer", default="log_norm")
     parser.add_argument("--counts-layer", default="counts")
     parser.add_argument("--labels-key", default="Level_3")
+    parser.add_argument("--dataset-key", default="Dataset", help="obs column holding the study of origin.")
+    parser.add_argument("--n-test-datasets", type=int, default=4, help="Hold out the N smallest datasets as test.")
+    parser.add_argument(
+        "--test-datasets", nargs="+", default=None, help="Hold out these datasets instead of the N smallest."
+    )
     parser.add_argument("--hidden", type=int, nargs="+", default=[512, 256])
-    parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--val-frac", type=float, default=0.1, help="Validation fraction (within the train split).")
-    parser.add_argument("--test-frac", type=float, default=0.2, help="Held-out test fraction for evaluation.")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--num-workers", type=int, default=0, help="DataLoader workers for on-the-fly densifying.")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
@@ -240,13 +234,34 @@ def main() -> None:
     mal_mask = derive_malignant_mask(level3)
     root_y = np.where(mal_mask, MALIGNANT, NON_MALIGNANT)
 
-    # Hold out a stratified test set shared across all three models.
-    train_idx, test_idx = stratified_split(level3, args.test_frac, args.seed)
+    # Hold out whole datasets (the smallest ones) shared across all three models.
+    datasets = atlas.obs[args.dataset_key].astype(str).to_numpy()
+ 
+    train_idx, test_idx, test_datasets, dataset_counts = dataset_holdout_split(
+        datasets, args.n_test_datasets, args.test_datasets
+    )
+    print(f"\nHeld-out datasets: {', '.join(test_datasets)}")
     print(f"{len(train_idx)} train / {len(test_idx)} held-out test cells")
+
+    missing_in_test = sorted(set(level3[train_idx]) - set(level3[test_idx]))
+    if missing_in_test:
+        print(f"Classes absent from the hold-out (not scored): {', '.join(missing_in_test)}")
+
+    # Record the split so the docs can state exactly which studies were held out.
+    split_df = pd.DataFrame(
+        {
+            "dataset": dataset_counts.index.astype(str),
+            "n_cells": dataset_counts.to_numpy(),
+            "split": np.where(np.isin(dataset_counts.index.astype(str), test_datasets), "test", "train"),
+        }
+    ).sort_values(["split", "n_cells"], ascending=[True, False])
+    split_df.to_csv(eval_dir / "test_split.csv", index=False)
+    print(f"  wrote {eval_dir / 'test_split.csv'}")
 
     def save(name: str, ckpt: dict) -> None:
         ckpt["genes"] = list(genes)
         ckpt["input_layer"] = args.log1p_layer
+        ckpt["test_datasets"] = list(test_datasets)
         torch.save(ckpt, out_dir / f"{name}.pt")
         print(f"Saved {name}.pt ({len(ckpt['classes'])} classes, val_acc={ckpt['best_val_acc']:.3f})")
 
@@ -257,10 +272,11 @@ def main() -> None:
         "lr": args.lr,
         "val_frac": args.val_frac,
         "device": args.device,
+        "seed": args.seed,
         "num_workers": args.num_workers,
     }
 
-    # --- Train the three models on the training split only -------------------
+    # --- Train the three models on the training datasets only ----------------
     mal_train = mal_mask[train_idx]
 
     print("[1/3] root (Malignant vs Non-Malignant)")
@@ -279,36 +295,19 @@ def main() -> None:
     )
     save("nonmalignant", nonmal_ckpt)
 
-    # --- Evaluate every model on the held-out test set -----------------------
+    # --- Evaluate every model on the held-out datasets -----------------------
     print(f"\nEvaluating on {len(test_idx)} held-out cells; writing plots to {eval_dir}")
     x_test = x[test_idx]
     level3_test = level3[test_idx]
     root_y_test = root_y[test_idx]
     mal_test = mal_mask[test_idx]
 
-    metrics: dict[str, dict] = {}
-
     # 1. Root: Malignant vs Non-Malignant.
     root_pred = mlp_predict(root_model, x_test, root_ckpt["classes"], args.device)
-    metrics["root_malignant"] = plot_accuracy_bars(
-        root_y_test, root_pred, "Root — Malignant vs Non-Malignant", eval_dir / "accuracy_root.png"
-    )
 
-    # 2. Malignant Level-3 (on truly malignant test cells).
-    metrics["malignant_level3"] = plot_accuracy_bars(
-        level3_test[mal_test],
-        mlp_predict(mal_model, x_test[mal_test], mal_ckpt["classes"], args.device),
-        "Malignant Level-3 sub-classifier",
-        eval_dir / "accuracy_malignant_level3.png",
-    )
-
-    # 3. Non-malignant Level-3 (on truly non-malignant test cells).
-    metrics["nonmalignant_level3"] = plot_accuracy_bars(
-        level3_test[~mal_test],
-        mlp_predict(nonmal_model, x_test[~mal_test], nonmal_ckpt["classes"], args.device),
-        "Non-malignant Level-3 sub-classifier",
-        eval_dir / "accuracy_nonmalignant_level3.png",
-    )
+    # 2/3. Level-3 sub-classifiers, each on its *true* cells.
+    mal_pred = mlp_predict(mal_model, x_test[mal_test], mal_ckpt["classes"], args.device)
+    nonmal_pred = mlp_predict(nonmal_model, x_test[~mal_test], nonmal_ckpt["classes"], args.device)
 
     # 4. Combined: full hierarchy end-to-end (root routes cells to a sub-model).
     pred_route_mal = root_pred == MALIGNANT
@@ -319,11 +318,45 @@ def main() -> None:
         combined[~pred_route_mal] = mlp_predict(
             nonmal_model, x_test[~pred_route_mal], nonmal_ckpt["classes"], args.device
         )
-    metrics["combined_level3"] = plot_accuracy_bars(
-        level3_test, combined.astype(str), "Combined hierarchy — Level-3", eval_dir / "accuracy_combined_level3.png"
-    )
+
+    # Which held-out cells each task scores, and what it predicted for them.
+    all_rows = np.arange(len(test_idx))
+    scored = {
+        "root_malignant": (all_rows, root_y_test, root_pred),
+        "malignant_level3": (np.flatnonzero(mal_test), level3_test[mal_test], mal_pred),
+        "nonmalignant_level3": (np.flatnonzero(~mal_test), level3_test[~mal_test], nonmal_pred),
+        "combined_level3": (all_rows, level3_test, combined.astype(str)),
+    }
+
+    cells_test = atlas.obs_names.to_numpy()[test_idx]
+    datasets_test = datasets[test_idx]
+    metrics: dict[str, dict] = {}
+    frames: list[pd.DataFrame] = []
+    for task, (rows, y_true, y_pred) in scored.items():
+        title, filename = TASKS[task]
+        if len(rows) == 0:
+            print(f"  skipping {task}: no held-out cells")
+            continue
+        metrics[task] = plot_f1_bars(y_true, y_pred, title, eval_dir / filename)
+        frames.append(
+            pd.DataFrame(
+                {
+                    "task": task,
+                    "cell": cells_test[rows],
+                    "dataset": datasets_test[rows],
+                    "y_true": np.asarray(y_true, dtype=str),
+                    "y_pred": np.asarray(y_pred, dtype=str),
+                }
+            )
+        )
+
+    # Persist the raw calls so the figures can be rebuilt (and remetriced) later
+    # with scripts/plot_performance.py, no retraining required.
+    pd.concat(frames, ignore_index=True).to_csv(eval_dir / "predictions.csv", index=False)
+    print(f"  wrote {eval_dir / 'predictions.csv'}")
 
     metrics_df = pd.DataFrame(metrics).T.rename_axis("task").reset_index()
+    metrics_df.insert(1, "test_datasets", "|".join(test_datasets))
     metrics_df.to_csv(eval_dir / "metrics.csv", index=False)
     print("\n" + metrics_df.to_string(index=False))
     print(f"\nDone. Checkpoints -> {out_dir}   |   evaluation -> {eval_dir}")

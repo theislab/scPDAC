@@ -1,0 +1,17 @@
+dataset,n_cells,split
+Elyada_2019,18285,test
+Lin_2020,14613,test
+Schlesinger_2020,5387,test
+Kemp_2020,2714,test
+Ding_2022,205871,train
+Simeone_2023,199952,train
+Hwang_2022,186330,train
+Yue_2020,76094,train
+Zhang_2023,72405,train
+Caronni_2023,71985,train
+Peng_2019,56079,train
+Steele_2020,42259,train
+Schalck_2022,40971,train
+Carpenter_2023,33309,train
+Kim_2022,29622,train
+Lee_2021,22440,train

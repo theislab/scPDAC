@@ -1,0 +1,689 @@
+Mon Aug 17 11:57:11 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.173.02             Driver Version: 580.173.02     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    Off |   00000000:41:00.0 Off |                    0 |
+| N/A   31C    P0             81W /  350W |       0MiB /  46068MiB |      2%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Reading atlas from /data/Daniele/atlases/final_versions_topublish/Mouse.zarr ...
+AnnData object with n_obs × n_vars = 602670 × 2232
+    obs: 'Sample_ID', 'Condition', 'Treatment', 'TreatmentType', 'TreatmentStatus', 'Tissue', 'Sex', 'Dataset', 'Technology', 'Level_1', 'Level_2', 'Level_3', 'Level_4', 'Model', 'Barcoded', 'Strain', 'Genotype', 'Larry_positive', 'Provenance'
+    var: 'manual_gene'
+    uns: 'Level_1_final_colors', 'Level_1_refined_colors', 'Level_2_colors', 'Level_2_final_colors', 'Level_3_colors', 'Level_3_final_colors', 'Level_4_final_colors', 'Level_4_knn_colors', 'log1p', 'neighbors', 'umap'
+    obsm: 'Cell_filtering', 'DRVI_emb', 'X_pca', 'X_scANVI', 'X_umap', 'X_umap_circle', 'batch', 'bin_edges', 'expiMAP_emb', 'leiden', 'leiden_0.5', 'leiden_1.0', 'leiden_1.5', 'leiden_endothelial_level_1', 'leiden_epithelial_level_1', 'leiden_fibroblast_level_1', 'leiden_lymphoid_level_1', 'leiden_myeloid_level_1', 'log1p_n_genes_by_counts', 'log1p_total_counts', 'log1p_total_counts_hb', 'log1p_total_counts_malat', 'log1p_total_counts_mt', 'log1p_total_counts_ribo', 'n_genes_by_counts', 'outlier', 'pct_counts_hb', 'pct_counts_in_top_20_genes', 'pct_counts_malat', 'pct_counts_mt', 'pct_counts_ribo', 'scANVI_cross_species', 'scANVI_emb', 'scANVI_emb_final', 'scANVI_emb_final ', 'scPOLI_emb', 'scVI_emb', 'total_counts', 'total_counts_hb', 'total_counts_malat', 'total_counts_mt', 'total_counts_ribo'
+    layers: 'binned_data', 'counts', 'log_norm'
+    obsp: 'connectivities', 'distances'
+Training on 602670 cells, 2232 genes, 27 Level-3 classes
+
+Held-out datasets: Chen_2021, Erdem_2024, Han_2023, Rupert_2025
+524822 train / 77848 held-out test cells
+  wrote scripts/eval_outputs/mouse/test_split.csv
+[1/3] root (Malignant vs Non-Malignant)
+  epoch 1/20  batch 0/1845  loss=0.617
+  epoch 1/20  batch 500/1845  loss=0.013
+  epoch 1/20  batch 1000/1845  loss=0.028
+  epoch 1/20  batch 1500/1845  loss=0.021
+  epoch 1/20  val_acc=0.992
+  epoch 2/20  batch 0/1845  loss=0.012
+  epoch 2/20  batch 500/1845  loss=0.019
+  epoch 2/20  batch 1000/1845  loss=0.022
+  epoch 2/20  batch 1500/1845  loss=0.019
+  epoch 2/20  val_acc=0.993
+  epoch 3/20  batch 0/1845  loss=0.024
+  epoch 3/20  batch 500/1845  loss=0.036
+  epoch 3/20  batch 1000/1845  loss=0.012
+  epoch 3/20  batch 1500/1845  loss=0.024
+  epoch 3/20  val_acc=0.993
+  epoch 4/20  batch 0/1845  loss=0.006
+  epoch 4/20  batch 500/1845  loss=0.001
+  epoch 4/20  batch 1000/1845  loss=0.014
+  epoch 4/20  batch 1500/1845  loss=0.002
+  epoch 4/20  val_acc=0.993
+  epoch 5/20  batch 0/1845  loss=0.003
+  epoch 5/20  batch 500/1845  loss=0.007
+  epoch 5/20  batch 1000/1845  loss=0.015
+  epoch 5/20  batch 1500/1845  loss=0.008
+  epoch 5/20  val_acc=0.993
+  epoch 6/20  batch 0/1845  loss=0.001
+  epoch 6/20  batch 500/1845  loss=0.000
+  epoch 6/20  batch 1000/1845  loss=0.004
+  epoch 6/20  batch 1500/1845  loss=0.007
+  epoch 6/20  val_acc=0.993
+  epoch 7/20  batch 0/1845  loss=0.004
+  epoch 7/20  batch 500/1845  loss=0.004
+  epoch 7/20  batch 1000/1845  loss=0.009
+  epoch 7/20  batch 1500/1845  loss=0.001
+  epoch 7/20  val_acc=0.994
+  epoch 8/20  batch 0/1845  loss=0.007
+  epoch 8/20  batch 500/1845  loss=0.016
+  epoch 8/20  batch 1000/1845  loss=0.015
+  epoch 8/20  batch 1500/1845  loss=0.001
+  epoch 8/20  val_acc=0.993
+  epoch 9/20  batch 0/1845  loss=0.000
+  epoch 9/20  batch 500/1845  loss=0.001
+  epoch 9/20  batch 1000/1845  loss=0.004
+  epoch 9/20  batch 1500/1845  loss=0.002
+  epoch 9/20  val_acc=0.994
+  epoch 10/20  batch 0/1845  loss=0.001
+  epoch 10/20  batch 500/1845  loss=0.015
+  epoch 10/20  batch 1000/1845  loss=0.014
+  epoch 10/20  batch 1500/1845  loss=0.002
+  epoch 10/20  val_acc=0.993
+  epoch 11/20  batch 0/1845  loss=0.002
+  epoch 11/20  batch 500/1845  loss=0.004
+  epoch 11/20  batch 1000/1845  loss=0.002
+  epoch 11/20  batch 1500/1845  loss=0.001
+  epoch 11/20  val_acc=0.993
+  epoch 12/20  batch 0/1845  loss=0.008
+  epoch 12/20  batch 500/1845  loss=0.002
+  epoch 12/20  batch 1000/1845  loss=0.002
+  epoch 12/20  batch 1500/1845  loss=0.016
+  epoch 12/20  val_acc=0.994
+  epoch 13/20  batch 0/1845  loss=0.005
+  epoch 13/20  batch 500/1845  loss=0.005
+  epoch 13/20  batch 1000/1845  loss=0.012
+  epoch 13/20  batch 1500/1845  loss=0.001
+  epoch 13/20  val_acc=0.994
+  epoch 14/20  batch 0/1845  loss=0.003
+  epoch 14/20  batch 500/1845  loss=0.001
+  epoch 14/20  batch 1000/1845  loss=0.001
+  epoch 14/20  batch 1500/1845  loss=0.006
+  epoch 14/20  val_acc=0.993
+  epoch 15/20  batch 0/1845  loss=0.001
+  epoch 15/20  batch 500/1845  loss=0.003
+  epoch 15/20  batch 1000/1845  loss=0.002
+  epoch 15/20  batch 1500/1845  loss=0.012
+  epoch 15/20  val_acc=0.994
+  epoch 16/20  batch 0/1845  loss=0.002
+  epoch 16/20  batch 500/1845  loss=0.000
+  epoch 16/20  batch 1000/1845  loss=0.000
+  epoch 16/20  batch 1500/1845  loss=0.000
+  epoch 16/20  val_acc=0.994
+  epoch 17/20  batch 0/1845  loss=0.002
+  epoch 17/20  batch 500/1845  loss=0.001
+  epoch 17/20  batch 1000/1845  loss=0.000
+  epoch 17/20  batch 1500/1845  loss=0.000
+  epoch 17/20  val_acc=0.994
+  epoch 18/20  batch 0/1845  loss=0.002
+  epoch 18/20  batch 500/1845  loss=0.004
+  epoch 18/20  batch 1000/1845  loss=0.018
+  epoch 18/20  batch 1500/1845  loss=0.012
+  epoch 18/20  val_acc=0.994
+  epoch 19/20  batch 0/1845  loss=0.003
+  epoch 19/20  batch 500/1845  loss=0.001
+  epoch 19/20  batch 1000/1845  loss=0.000
+  epoch 19/20  batch 1500/1845  loss=0.000
+  epoch 19/20  val_acc=0.994
+  epoch 20/20  batch 0/1845  loss=0.000
+  epoch 20/20  batch 500/1845  loss=0.002
+  epoch 20/20  batch 1000/1845  loss=0.005
+  epoch 20/20  batch 1500/1845  loss=0.002
+  epoch 20/20  val_acc=0.994
+Saved root.pt (2 classes, val_acc=0.994)
+[2/3] malignant sub-classifier
+  epoch 1/20  batch 0/378  loss=1.164
+  epoch 1/20  val_acc=0.905
+  epoch 2/20  batch 0/378  loss=0.200
+  epoch 2/20  val_acc=0.918
+  epoch 3/20  batch 0/378  loss=0.205
+  epoch 3/20  val_acc=0.917
+  epoch 4/20  batch 0/378  loss=0.192
+  epoch 4/20  val_acc=0.916
+  epoch 5/20  batch 0/378  loss=0.148
+  epoch 5/20  val_acc=0.923
+  epoch 6/20  batch 0/378  loss=0.119
+  epoch 6/20  val_acc=0.925
+  epoch 7/20  batch 0/378  loss=0.105
+  epoch 7/20  val_acc=0.916
+  epoch 8/20  batch 0/378  loss=0.076
+  epoch 8/20  val_acc=0.922
+  epoch 9/20  batch 0/378  loss=0.090
+  epoch 9/20  val_acc=0.926
+  epoch 10/20  batch 0/378  loss=0.040
+  epoch 10/20  val_acc=0.925
+  epoch 11/20  batch 0/378  loss=0.099
+  epoch 11/20  val_acc=0.927
+  epoch 12/20  batch 0/378  loss=0.045
+  epoch 12/20  val_acc=0.927
+  epoch 13/20  batch 0/378  loss=0.036
+  epoch 13/20  val_acc=0.924
+  epoch 14/20  batch 0/378  loss=0.042
+  epoch 14/20  val_acc=0.925
+  epoch 15/20  batch 0/378  loss=0.062
+  epoch 15/20  val_acc=0.929
+  epoch 16/20  batch 0/378  loss=0.053
+  epoch 16/20  val_acc=0.928
+  epoch 17/20  batch 0/378  loss=0.018
+  epoch 17/20  val_acc=0.929
+  epoch 18/20  batch 0/378  loss=0.019
+  epoch 18/20  val_acc=0.928
+  epoch 19/20  batch 0/378  loss=0.014
+  epoch 19/20  val_acc=0.925
+  epoch 20/20  batch 0/378  loss=0.016
+  epoch 20/20  val_acc=0.930
+Saved malignant.pt (3 classes, val_acc=0.930)
+[3/3] non-malignant sub-classifier
+  epoch 1/20  batch 0/1466  loss=3.261
+  epoch 1/20  batch 500/1466  loss=0.619
+  epoch 1/20  batch 1000/1466  loss=0.532
+  epoch 1/20  val_acc=0.869
+  epoch 2/20  batch 0/1466  loss=0.561
+  epoch 2/20  batch 500/1466  loss=0.505
+  epoch 2/20  batch 1000/1466  loss=0.422
+  epoch 2/20  val_acc=0.882
+  epoch 3/20  batch 0/1466  loss=0.449
+  epoch 3/20  batch 500/1466  loss=0.308
+  epoch 3/20  batch 1000/1466  loss=0.445
+  epoch 3/20  val_acc=0.885
+  epoch 4/20  batch 0/1466  loss=0.367
+  epoch 4/20  batch 500/1466  loss=0.409
+  epoch 4/20  batch 1000/1466  loss=0.372
+  epoch 4/20  val_acc=0.890
+  epoch 5/20  batch 0/1466  loss=0.290
+  epoch 5/20  batch 500/1466  loss=0.361
+  epoch 5/20  batch 1000/1466  loss=0.281
+  epoch 5/20  val_acc=0.891
+  epoch 6/20  batch 0/1466  loss=0.353
+  epoch 6/20  batch 500/1466  loss=0.221
+  epoch 6/20  batch 1000/1466  loss=0.366
+  epoch 6/20  val_acc=0.892
+  epoch 7/20  batch 0/1466  loss=0.332
+  epoch 7/20  batch 500/1466  loss=0.286
+  epoch 7/20  batch 1000/1466  loss=0.300
+  epoch 7/20  val_acc=0.892
+  epoch 8/20  batch 0/1466  loss=0.277
+  epoch 8/20  batch 500/1466  loss=0.225
+  epoch 8/20  batch 1000/1466  loss=0.231
+  epoch 8/20  val_acc=0.892
+  epoch 9/20  batch 0/1466  loss=0.308
+  epoch 9/20  batch 500/1466  loss=0.316
+  epoch 9/20  batch 1000/1466  loss=0.280
+  epoch 9/20  val_acc=0.894
+  epoch 10/20  batch 0/1466  loss=0.243
+  epoch 10/20  batch 500/1466  loss=0.230
+  epoch 10/20  batch 1000/1466  loss=0.282
+  epoch 10/20  val_acc=0.893
+  epoch 11/20  batch 0/1466  loss=0.275
+  epoch 11/20  batch 500/1466  loss=0.218
+  epoch 11/20  batch 1000/1466  loss=0.306
+  epoch 11/20  val_acc=0.893
+  epoch 12/20  batch 0/1466  loss=0.230
+  epoch 12/20  batch 500/1466  loss=0.316
+  epoch 12/20  batch 1000/1466  loss=0.244
+  epoch 12/20  val_acc=0.893
+  epoch 13/20  batch 0/1466  loss=0.208
+  epoch 13/20  batch 500/1466  loss=0.194
+  epoch 13/20  batch 1000/1466  loss=0.211
+  epoch 13/20  val_acc=0.893
+  epoch 14/20  batch 0/1466  loss=0.227
+  epoch 14/20  batch 500/1466  loss=0.250
+  epoch 14/20  batch 1000/1466  loss=0.231
+  epoch 14/20  val_acc=0.891
+  epoch 15/20  batch 0/1466  loss=0.241
+  epoch 15/20  batch 500/1466  loss=0.213
+  epoch 15/20  batch 1000/1466  loss=0.154
+  epoch 15/20  val_acc=0.890
+  epoch 16/20  batch 0/1466  loss=0.216
+  epoch 16/20  batch 500/1466  loss=0.153
+  epoch 16/20  batch 1000/1466  loss=0.157
+  epoch 16/20  val_acc=0.891
+  epoch 17/20  batch 0/1466  loss=0.209
+  epoch 17/20  batch 500/1466  loss=0.192
+  epoch 17/20  batch 1000/1466  loss=0.170
+  epoch 17/20  val_acc=0.890
+  epoch 18/20  batch 0/1466  loss=0.219
+  epoch 18/20  batch 500/1466  loss=0.091
+  epoch 18/20  batch 1000/1466  loss=0.190
+  epoch 18/20  val_acc=0.888
+  epoch 19/20  batch 0/1466  loss=0.148
+  epoch 19/20  batch 500/1466  loss=0.122
+  epoch 19/20  batch 1000/1466  loss=0.181
+  epoch 19/20  val_acc=0.887
+  epoch 20/20  batch 0/1466  loss=0.153
+  epoch 20/20  batch 500/1466  loss=0.254
+  epoch 20/20  batch 1000/1466  loss=0.141
+  epoch 20/20  val_acc=0.884
+Saved nonmalignant.pt (24 classes, val_acc=0.894)
+
+Evaluating on 77848 held-out cells; writing plots to scripts/eval_outputs/mouse
+  wrote scripts/eval_outputs/mouse/f1_root.png  (weighted-F1=0.986, macro-F1=0.982)
+  wrote scripts/eval_outputs/mouse/f1_malignant_level3.png  (weighted-F1=0.935, macro-F1=0.665)
+  wrote scripts/eval_outputs/mouse/f1_nonmalignant_level3.png  (weighted-F1=0.867, macro-F1=0.608)
+  wrote scripts/eval_outputs/mouse/f1_combined_level3.png  (weighted-F1=0.876, macro-F1=0.591)
+  wrote scripts/eval_outputs/mouse/predictions.csv
+
+               task                             test_datasets  weighted_f1  macro_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
+     root_malignant Chen_2021|Erdem_2024|Han_2023|Rupert_2025     0.985679  0.982176         0.979539      0.984906  0.985639  77848.0        2.0
+   malignant_level3 Chen_2021|Erdem_2024|Han_2023|Rupert_2025     0.934970  0.664658         0.726634      0.669207  0.933102  21570.0        3.0
+nonmalignant_level3 Chen_2021|Erdem_2024|Han_2023|Rupert_2025     0.866555  0.607668         0.630195      0.657131  0.873965  56278.0       24.0
+    combined_level3 Chen_2021|Erdem_2024|Han_2023|Rupert_2025     0.875779  0.590892         0.611895      0.626698  0.881590  77848.0       27.0
+
+Done. Checkpoints -> src/scpdac/models/classifier/mouse   |   evaluation -> scripts/eval_outputs/mouse
+Reading atlas from /data/Daniele/atlases/final_versions_topublish/Human.zarr ...
+AnnData object with n_obs × n_vars = 1078316 × 2232
+    obs: 'Sample_ID', 'Condition', 'Treatment', 'TreatmentType', 'TreatmentStatus', 'Tissue', 'Sex', 'Dataset', 'Technology', 'Level_1', 'Level_2', 'Level_3', 'Level_4', 'Age', 'Diabetes', 'Is_Core', 'EMT category', 'Dataset_ID', 'Cluster_Names'
+    var: 'n_cells', 'ensembl_id', 'start', 'end', 'chromosome', 'gene_name_adata_sc', 'highly_variable_adata_sc', 'means_adata_sc', 'dispersions_adata_sc', 'dispersions_norm_adata_sc', 'highly_variable_nbatches_adata_sc', 'highly_variable_intersection_adata_sc', 'n_cells_by_counts_adata_sc', 'mean_counts_adata_sc', 'log1p_mean_counts_adata_sc', 'pct_dropout_by_counts_adata_sc', 'total_counts_adata_sc', 'log1p_total_counts_adata_sc', 'mito_adata_sc', 'n_cells_by_counts_adata_sn', 'mean_counts_adata_sn', 'log1p_mean_counts_adata_sn', 'pct_dropout_by_counts_adata_sn', 'total_counts_adata_sn', 'log1p_total_counts_adata_sn', 'Manual_Genes', 'mt', 'ribo', 'hb'
+    uns: 'Condition_colors', 'Is_Core_colors', 'Level_1_colors', 'Level_2_colors', 'Level_3_colors', 'Level_4_All_colors', 'Level_4_Final_colors', 'Level_4_colors', 'UMAP_0.75', 'UMAP_0.85', '_scvi_manager_uuid', '_scvi_uuid', 'neighbors', 'umap'
+    obsm: 'EMT score', 'EMT_score_DL', 'Global_Leiden', 'MALAT1_lognorm', 'UMAP_0.75', 'UMAP_0.85', 'UMAP_0.95', 'X_pca', 'X_umap', '_scvi_batch', '_scvi_labels', 'batch', 'bin_edges', 'cnv_score_abs', 'empty_droplet', 'infercnv_score_malignant', 'infercnv_score_malignant_refined', 'is_outlier_total_counts', 'leiden', 'leiden_0.2', 'leiden_0.2_annotation', 'leiden_0.5', 'leiden_subcluster', 'level0_leiden_subcluster', 'log1p_n_genes_by_counts', 'log1p_total_counts', 'log1p_total_counts_mito', 'log_counts', 'mt_frac', 'n_counts', 'n_genes', 'n_genes_by_counts', 'outlier', 'pct_counts_mito', 'scANVI_cross_species', 'scANVI_emb_final', 'scanvi_L4_emb', 'scanvi_extended_atlas_emb', 'total_counts', 'total_counts_mito'
+    layers: 'counts', 'log_norm', 'raw'
+    obsp: 'connectivities', 'distances'
+Training on 1078316 cells, 2232 genes, 28 Level-3 classes
+
+Held-out datasets: Kemp_2020, Schlesinger_2020, Lin_2020, Elyada_2019
+1037317 train / 40999 held-out test cells
+Classes absent from the hold-out (not scored): Alpha Cell, Pericyte, Smooth Muscle Cell
+  wrote scripts/eval_outputs/human/test_split.csv
+[1/3] root (Malignant vs Non-Malignant)
+  epoch 1/20  batch 0/3646  loss=0.673
+  epoch 1/20  batch 500/3646  loss=0.107
+  epoch 1/20  batch 1000/3646  loss=0.201
+  epoch 1/20  batch 1500/3646  loss=0.145
+  epoch 1/20  batch 2000/3646  loss=0.123
+  epoch 1/20  batch 2500/3646  loss=0.118
+  epoch 1/20  batch 3000/3646  loss=0.136
+  epoch 1/20  batch 3500/3646  loss=0.086
+  epoch 1/20  val_acc=0.953
+  epoch 2/20  batch 0/3646  loss=0.104
+  epoch 2/20  batch 500/3646  loss=0.090
+  epoch 2/20  batch 1000/3646  loss=0.173
+  epoch 2/20  batch 1500/3646  loss=0.099
+  epoch 2/20  batch 2000/3646  loss=0.103
+  epoch 2/20  batch 2500/3646  loss=0.139
+  epoch 2/20  batch 3000/3646  loss=0.125
+  epoch 2/20  batch 3500/3646  loss=0.094
+  epoch 2/20  val_acc=0.956
+  epoch 3/20  batch 0/3646  loss=0.116
+  epoch 3/20  batch 500/3646  loss=0.110
+  epoch 3/20  batch 1000/3646  loss=0.116
+  epoch 3/20  batch 1500/3646  loss=0.096
+  epoch 3/20  batch 2000/3646  loss=0.121
+  epoch 3/20  batch 2500/3646  loss=0.135
+  epoch 3/20  batch 3000/3646  loss=0.121
+  epoch 3/20  batch 3500/3646  loss=0.180
+  epoch 3/20  val_acc=0.958
+  epoch 4/20  batch 0/3646  loss=0.109
+  epoch 4/20  batch 500/3646  loss=0.100
+  epoch 4/20  batch 1000/3646  loss=0.117
+  epoch 4/20  batch 1500/3646  loss=0.092
+  epoch 4/20  batch 2000/3646  loss=0.122
+  epoch 4/20  batch 2500/3646  loss=0.168
+  epoch 4/20  batch 3000/3646  loss=0.045
+  epoch 4/20  batch 3500/3646  loss=0.081
+  epoch 4/20  val_acc=0.960
+  epoch 5/20  batch 0/3646  loss=0.062
+  epoch 5/20  batch 500/3646  loss=0.106
+  epoch 5/20  batch 1000/3646  loss=0.088
+  epoch 5/20  batch 1500/3646  loss=0.070
+  epoch 5/20  batch 2000/3646  loss=0.102
+  epoch 5/20  batch 2500/3646  loss=0.089
+  epoch 5/20  batch 3000/3646  loss=0.106
+  epoch 5/20  batch 3500/3646  loss=0.074
+  epoch 5/20  val_acc=0.960
+  epoch 6/20  batch 0/3646  loss=0.099
+  epoch 6/20  batch 500/3646  loss=0.095
+  epoch 6/20  batch 1000/3646  loss=0.083
+  epoch 6/20  batch 1500/3646  loss=0.047
+  epoch 6/20  batch 2000/3646  loss=0.049
+  epoch 6/20  batch 2500/3646  loss=0.073
+  epoch 6/20  batch 3000/3646  loss=0.062
+  epoch 6/20  batch 3500/3646  loss=0.051
+  epoch 6/20  val_acc=0.960
+  epoch 7/20  batch 0/3646  loss=0.041
+  epoch 7/20  batch 500/3646  loss=0.071
+  epoch 7/20  batch 1000/3646  loss=0.041
+  epoch 7/20  batch 1500/3646  loss=0.063
+  epoch 7/20  batch 2000/3646  loss=0.098
+  epoch 7/20  batch 2500/3646  loss=0.079
+  epoch 7/20  batch 3000/3646  loss=0.065
+  epoch 7/20  batch 3500/3646  loss=0.080
+  epoch 7/20  val_acc=0.960
+  epoch 8/20  batch 0/3646  loss=0.052
+  epoch 8/20  batch 500/3646  loss=0.073
+  epoch 8/20  batch 1000/3646  loss=0.097
+  epoch 8/20  batch 1500/3646  loss=0.096
+  epoch 8/20  batch 2000/3646  loss=0.053
+  epoch 8/20  batch 2500/3646  loss=0.047
+  epoch 8/20  batch 3000/3646  loss=0.102
+  epoch 8/20  batch 3500/3646  loss=0.088
+  epoch 8/20  val_acc=0.961
+  epoch 9/20  batch 0/3646  loss=0.091
+  epoch 9/20  batch 500/3646  loss=0.052
+  epoch 9/20  batch 1000/3646  loss=0.060
+  epoch 9/20  batch 1500/3646  loss=0.059
+  epoch 9/20  batch 2000/3646  loss=0.080
+  epoch 9/20  batch 2500/3646  loss=0.074
+  epoch 9/20  batch 3000/3646  loss=0.070
+  epoch 9/20  batch 3500/3646  loss=0.055
+  epoch 9/20  val_acc=0.960
+  epoch 10/20  batch 0/3646  loss=0.051
+  epoch 10/20  batch 500/3646  loss=0.044
+  epoch 10/20  batch 1000/3646  loss=0.059
+  epoch 10/20  batch 1500/3646  loss=0.046
+  epoch 10/20  batch 2000/3646  loss=0.062
+  epoch 10/20  batch 2500/3646  loss=0.068
+  epoch 10/20  batch 3000/3646  loss=0.059
+  epoch 10/20  batch 3500/3646  loss=0.090
+  epoch 10/20  val_acc=0.960
+  epoch 11/20  batch 0/3646  loss=0.028
+  epoch 11/20  batch 500/3646  loss=0.068
+  epoch 11/20  batch 1000/3646  loss=0.035
+  epoch 11/20  batch 1500/3646  loss=0.060
+  epoch 11/20  batch 2000/3646  loss=0.049
+  epoch 11/20  batch 2500/3646  loss=0.034
+  epoch 11/20  batch 3000/3646  loss=0.078
+  epoch 11/20  batch 3500/3646  loss=0.059
+  epoch 11/20  val_acc=0.960
+  epoch 12/20  batch 0/3646  loss=0.038
+  epoch 12/20  batch 500/3646  loss=0.054
+  epoch 12/20  batch 1000/3646  loss=0.060
+  epoch 12/20  batch 1500/3646  loss=0.044
+  epoch 12/20  batch 2000/3646  loss=0.055
+  epoch 12/20  batch 2500/3646  loss=0.048
+  epoch 12/20  batch 3000/3646  loss=0.075
+  epoch 12/20  batch 3500/3646  loss=0.046
+  epoch 12/20  val_acc=0.960
+  epoch 13/20  batch 0/3646  loss=0.071
+  epoch 13/20  batch 500/3646  loss=0.033
+  epoch 13/20  batch 1000/3646  loss=0.034
+  epoch 13/20  batch 1500/3646  loss=0.066
+  epoch 13/20  batch 2000/3646  loss=0.079
+  epoch 13/20  batch 2500/3646  loss=0.062
+  epoch 13/20  batch 3000/3646  loss=0.044
+  epoch 13/20  batch 3500/3646  loss=0.047
+  epoch 13/20  val_acc=0.959
+  epoch 14/20  batch 0/3646  loss=0.033
+  epoch 14/20  batch 500/3646  loss=0.027
+  epoch 14/20  batch 1000/3646  loss=0.043
+  epoch 14/20  batch 1500/3646  loss=0.043
+  epoch 14/20  batch 2000/3646  loss=0.057
+  epoch 14/20  batch 2500/3646  loss=0.079
+  epoch 14/20  batch 3000/3646  loss=0.063
+  epoch 14/20  batch 3500/3646  loss=0.053
+  epoch 14/20  val_acc=0.959
+  epoch 15/20  batch 0/3646  loss=0.080
+  epoch 15/20  batch 500/3646  loss=0.034
+  epoch 15/20  batch 1000/3646  loss=0.040
+  epoch 15/20  batch 1500/3646  loss=0.036
+  epoch 15/20  batch 2000/3646  loss=0.046
+  epoch 15/20  batch 2500/3646  loss=0.038
+  epoch 15/20  batch 3000/3646  loss=0.032
+  epoch 15/20  batch 3500/3646  loss=0.053
+  epoch 15/20  val_acc=0.958
+  epoch 16/20  batch 0/3646  loss=0.018
+  epoch 16/20  batch 500/3646  loss=0.048
+  epoch 16/20  batch 1000/3646  loss=0.021
+  epoch 16/20  batch 1500/3646  loss=0.043
+  epoch 16/20  batch 2000/3646  loss=0.049
+  epoch 16/20  batch 2500/3646  loss=0.043
+  epoch 16/20  batch 3000/3646  loss=0.058
+  epoch 16/20  batch 3500/3646  loss=0.039
+  epoch 16/20  val_acc=0.958
+  epoch 17/20  batch 0/3646  loss=0.026
+  epoch 17/20  batch 500/3646  loss=0.045
+  epoch 17/20  batch 1000/3646  loss=0.061
+  epoch 17/20  batch 1500/3646  loss=0.025
+  epoch 17/20  batch 2000/3646  loss=0.036
+  epoch 17/20  batch 2500/3646  loss=0.053
+  epoch 17/20  batch 3000/3646  loss=0.041
+  epoch 17/20  batch 3500/3646  loss=0.045
+  epoch 17/20  val_acc=0.959
+  epoch 18/20  batch 0/3646  loss=0.042
+  epoch 18/20  batch 500/3646  loss=0.033
+  epoch 18/20  batch 1000/3646  loss=0.052
+  epoch 18/20  batch 1500/3646  loss=0.025
+  epoch 18/20  batch 2000/3646  loss=0.027
+  epoch 18/20  batch 2500/3646  loss=0.050
+  epoch 18/20  batch 3000/3646  loss=0.049
+  epoch 18/20  batch 3500/3646  loss=0.032
+  epoch 18/20  val_acc=0.958
+  epoch 19/20  batch 0/3646  loss=0.026
+  epoch 19/20  batch 500/3646  loss=0.018
+  epoch 19/20  batch 1000/3646  loss=0.073
+  epoch 19/20  batch 1500/3646  loss=0.052
+  epoch 19/20  batch 2000/3646  loss=0.014
+  epoch 19/20  batch 2500/3646  loss=0.043
+  epoch 19/20  batch 3000/3646  loss=0.048
+  epoch 19/20  batch 3500/3646  loss=0.019
+  epoch 19/20  val_acc=0.958
+  epoch 20/20  batch 0/3646  loss=0.038
+  epoch 20/20  batch 500/3646  loss=0.033
+  epoch 20/20  batch 1000/3646  loss=0.047
+  epoch 20/20  batch 1500/3646  loss=0.030
+  epoch 20/20  batch 2000/3646  loss=0.037
+  epoch 20/20  batch 2500/3646  loss=0.014
+  epoch 20/20  batch 3000/3646  loss=0.050
+  epoch 20/20  batch 3500/3646  loss=0.051
+  epoch 20/20  val_acc=0.957
+Saved root.pt (2 classes, val_acc=0.961)
+[2/3] malignant sub-classifier
+  epoch 1/20  batch 0/1271  loss=1.132
+  epoch 1/20  batch 500/1271  loss=0.136
+  epoch 1/20  batch 1000/1271  loss=0.139
+  epoch 1/20  val_acc=0.945
+  epoch 2/20  batch 0/1271  loss=0.150
+  epoch 2/20  batch 500/1271  loss=0.158
+  epoch 2/20  batch 1000/1271  loss=0.172
+  epoch 2/20  val_acc=0.946
+  epoch 3/20  batch 0/1271  loss=0.123
+  epoch 3/20  batch 500/1271  loss=0.131
+  epoch 3/20  batch 1000/1271  loss=0.114
+  epoch 3/20  val_acc=0.950
+  epoch 4/20  batch 0/1271  loss=0.088
+  epoch 4/20  batch 500/1271  loss=0.100
+  epoch 4/20  batch 1000/1271  loss=0.094
+  epoch 4/20  val_acc=0.951
+  epoch 5/20  batch 0/1271  loss=0.148
+  epoch 5/20  batch 500/1271  loss=0.060
+  epoch 5/20  batch 1000/1271  loss=0.081
+  epoch 5/20  val_acc=0.952
+  epoch 6/20  batch 0/1271  loss=0.055
+  epoch 6/20  batch 500/1271  loss=0.084
+  epoch 6/20  batch 1000/1271  loss=0.090
+  epoch 6/20  val_acc=0.949
+  epoch 7/20  batch 0/1271  loss=0.051
+  epoch 7/20  batch 500/1271  loss=0.101
+  epoch 7/20  batch 1000/1271  loss=0.091
+  epoch 7/20  val_acc=0.953
+  epoch 8/20  batch 0/1271  loss=0.044
+  epoch 8/20  batch 500/1271  loss=0.076
+  epoch 8/20  batch 1000/1271  loss=0.059
+  epoch 8/20  val_acc=0.950
+  epoch 9/20  batch 0/1271  loss=0.059
+  epoch 9/20  batch 500/1271  loss=0.042
+  epoch 9/20  batch 1000/1271  loss=0.062
+  epoch 9/20  val_acc=0.950
+  epoch 10/20  batch 0/1271  loss=0.038
+  epoch 10/20  batch 500/1271  loss=0.043
+  epoch 10/20  batch 1000/1271  loss=0.043
+  epoch 10/20  val_acc=0.952
+  epoch 11/20  batch 0/1271  loss=0.030
+  epoch 11/20  batch 500/1271  loss=0.052
+  epoch 11/20  batch 1000/1271  loss=0.061
+  epoch 11/20  val_acc=0.953
+  epoch 12/20  batch 0/1271  loss=0.061
+  epoch 12/20  batch 500/1271  loss=0.035
+  epoch 12/20  batch 1000/1271  loss=0.043
+  epoch 12/20  val_acc=0.952
+  epoch 13/20  batch 0/1271  loss=0.042
+  epoch 13/20  batch 500/1271  loss=0.034
+  epoch 13/20  batch 1000/1271  loss=0.032
+  epoch 13/20  val_acc=0.953
+  epoch 14/20  batch 0/1271  loss=0.030
+  epoch 14/20  batch 500/1271  loss=0.047
+  epoch 14/20  batch 1000/1271  loss=0.051
+  epoch 14/20  val_acc=0.952
+  epoch 15/20  batch 0/1271  loss=0.054
+  epoch 15/20  batch 500/1271  loss=0.047
+  epoch 15/20  batch 1000/1271  loss=0.036
+  epoch 15/20  val_acc=0.952
+  epoch 16/20  batch 0/1271  loss=0.038
+  epoch 16/20  batch 500/1271  loss=0.037
+  epoch 16/20  batch 1000/1271  loss=0.031
+  epoch 16/20  val_acc=0.951
+  epoch 17/20  batch 0/1271  loss=0.031
+  epoch 17/20  batch 500/1271  loss=0.008
+  epoch 17/20  batch 1000/1271  loss=0.047
+  epoch 17/20  val_acc=0.952
+  epoch 18/20  batch 0/1271  loss=0.026
+  epoch 18/20  batch 500/1271  loss=0.013
+  epoch 18/20  batch 1000/1271  loss=0.034
+  epoch 18/20  val_acc=0.953
+  epoch 19/20  batch 0/1271  loss=0.014
+  epoch 19/20  batch 500/1271  loss=0.018
+  epoch 19/20  batch 1000/1271  loss=0.014
+  epoch 19/20  val_acc=0.952
+  epoch 20/20  batch 0/1271  loss=0.038
+  epoch 20/20  batch 500/1271  loss=0.018
+  epoch 20/20  batch 1000/1271  loss=0.021
+  epoch 20/20  val_acc=0.951
+Saved malignant.pt (3 classes, val_acc=0.953)
+[3/3] non-malignant sub-classifier
+  epoch 1/20  batch 0/2375  loss=3.388
+  epoch 1/20  batch 500/2375  loss=0.554
+  epoch 1/20  batch 1000/2375  loss=0.417
+  epoch 1/20  batch 1500/2375  loss=0.533
+  epoch 1/20  batch 2000/2375  loss=0.399
+  epoch 1/20  val_acc=0.882
+  epoch 2/20  batch 0/2375  loss=0.568
+  epoch 2/20  batch 500/2375  loss=0.322
+  epoch 2/20  batch 1000/2375  loss=0.365
+  epoch 2/20  batch 1500/2375  loss=0.447
+  epoch 2/20  batch 2000/2375  loss=0.330
+  epoch 2/20  val_acc=0.886
+  epoch 3/20  batch 0/2375  loss=0.338
+  epoch 3/20  batch 500/2375  loss=0.467
+  epoch 3/20  batch 1000/2375  loss=0.324
+  epoch 3/20  batch 1500/2375  loss=0.375
+  epoch 3/20  batch 2000/2375  loss=0.356
+  epoch 3/20  val_acc=0.889
+  epoch 4/20  batch 0/2375  loss=0.294
+  epoch 4/20  batch 500/2375  loss=0.336
+  epoch 4/20  batch 1000/2375  loss=0.405
+  epoch 4/20  batch 1500/2375  loss=0.323
+  epoch 4/20  batch 2000/2375  loss=0.430
+  epoch 4/20  val_acc=0.891
+  epoch 5/20  batch 0/2375  loss=0.355
+  epoch 5/20  batch 500/2375  loss=0.347
+  epoch 5/20  batch 1000/2375  loss=0.317
+  epoch 5/20  batch 1500/2375  loss=0.204
+  epoch 5/20  batch 2000/2375  loss=0.341
+  epoch 5/20  val_acc=0.892
+  epoch 6/20  batch 0/2375  loss=0.281
+  epoch 6/20  batch 500/2375  loss=0.442
+  epoch 6/20  batch 1000/2375  loss=0.343
+  epoch 6/20  batch 1500/2375  loss=0.354
+  epoch 6/20  batch 2000/2375  loss=0.262
+  epoch 6/20  val_acc=0.892
+  epoch 7/20  batch 0/2375  loss=0.357
+  epoch 7/20  batch 500/2375  loss=0.237
+  epoch 7/20  batch 1000/2375  loss=0.228
+  epoch 7/20  batch 1500/2375  loss=0.362
+  epoch 7/20  batch 2000/2375  loss=0.343
+  epoch 7/20  val_acc=0.892
+  epoch 8/20  batch 0/2375  loss=0.398
+  epoch 8/20  batch 500/2375  loss=0.253
+  epoch 8/20  batch 1000/2375  loss=0.255
+  epoch 8/20  batch 1500/2375  loss=0.223
+  epoch 8/20  batch 2000/2375  loss=0.340
+  epoch 8/20  val_acc=0.891
+  epoch 9/20  batch 0/2375  loss=0.288
+  epoch 9/20  batch 500/2375  loss=0.244
+  epoch 9/20  batch 1000/2375  loss=0.275
+  epoch 9/20  batch 1500/2375  loss=0.205
+  epoch 9/20  batch 2000/2375  loss=0.310
+  epoch 9/20  val_acc=0.892
+  epoch 10/20  batch 0/2375  loss=0.286
+  epoch 10/20  batch 500/2375  loss=0.246
+  epoch 10/20  batch 1000/2375  loss=0.234
+  epoch 10/20  batch 1500/2375  loss=0.244
+  epoch 10/20  batch 2000/2375  loss=0.226
+  epoch 10/20  val_acc=0.893
+  epoch 11/20  batch 0/2375  loss=0.192
+  epoch 11/20  batch 500/2375  loss=0.233
+  epoch 11/20  batch 1000/2375  loss=0.211
+  epoch 11/20  batch 1500/2375  loss=0.219
+  epoch 11/20  batch 2000/2375  loss=0.244
+  epoch 11/20  val_acc=0.891
+  epoch 12/20  batch 0/2375  loss=0.302
+  epoch 12/20  batch 500/2375  loss=0.211
+  epoch 12/20  batch 1000/2375  loss=0.261
+  epoch 12/20  batch 1500/2375  loss=0.264
+  epoch 12/20  batch 2000/2375  loss=0.246
+  epoch 12/20  val_acc=0.893
+  epoch 13/20  batch 0/2375  loss=0.266
+  epoch 13/20  batch 500/2375  loss=0.284
+  epoch 13/20  batch 1000/2375  loss=0.290
+  epoch 13/20  batch 1500/2375  loss=0.189
+  epoch 13/20  batch 2000/2375  loss=0.228
+  epoch 13/20  val_acc=0.893
+  epoch 14/20  batch 0/2375  loss=0.233
+  epoch 14/20  batch 500/2375  loss=0.241
+  epoch 14/20  batch 1000/2375  loss=0.231
+  epoch 14/20  batch 1500/2375  loss=0.217
+  epoch 14/20  batch 2000/2375  loss=0.300
+  epoch 14/20  val_acc=0.892
+  epoch 15/20  batch 0/2375  loss=0.202
+  epoch 15/20  batch 500/2375  loss=0.167
+  epoch 15/20  batch 1000/2375  loss=0.218
+  epoch 15/20  batch 1500/2375  loss=0.259
+  epoch 15/20  batch 2000/2375  loss=0.239
+  epoch 15/20  val_acc=0.892
+  epoch 16/20  batch 0/2375  loss=0.222
+  epoch 16/20  batch 500/2375  loss=0.144
+  epoch 16/20  batch 1000/2375  loss=0.148
+  epoch 16/20  batch 1500/2375  loss=0.230
+  epoch 16/20  batch 2000/2375  loss=0.150
+  epoch 16/20  val_acc=0.891
+  epoch 17/20  batch 0/2375  loss=0.222
+  epoch 17/20  batch 500/2375  loss=0.267
+  epoch 17/20  batch 1000/2375  loss=0.235
+  epoch 17/20  batch 1500/2375  loss=0.174
+  epoch 17/20  batch 2000/2375  loss=0.213
+  epoch 17/20  val_acc=0.892
+  epoch 18/20  batch 0/2375  loss=0.204
+  epoch 18/20  batch 500/2375  loss=0.218
+  epoch 18/20  batch 1000/2375  loss=0.205
+  epoch 18/20  batch 1500/2375  loss=0.202
+  epoch 18/20  batch 2000/2375  loss=0.217
+  epoch 18/20  val_acc=0.891
+  epoch 19/20  batch 0/2375  loss=0.216
+  epoch 19/20  batch 500/2375  loss=0.218
+  epoch 19/20  batch 1000/2375  loss=0.203
+  epoch 19/20  batch 1500/2375  loss=0.222
+  epoch 19/20  batch 2000/2375  loss=0.154
+  epoch 19/20  val_acc=0.891
+  epoch 20/20  batch 0/2375  loss=0.164
+  epoch 20/20  batch 500/2375  loss=0.145
+  epoch 20/20  batch 1000/2375  loss=0.200
+  epoch 20/20  batch 1500/2375  loss=0.259
+  epoch 20/20  batch 2000/2375  loss=0.119
+  epoch 20/20  val_acc=0.891
+Saved nonmalignant.pt (25 classes, val_acc=0.893)
+
+Evaluating on 40999 held-out cells; writing plots to scripts/eval_outputs/human
+  wrote scripts/eval_outputs/human/f1_root.png  (weighted-F1=0.981, macro-F1=0.979)
+  wrote scripts/eval_outputs/human/f1_malignant_level3.png  (weighted-F1=0.954, macro-F1=0.770)
+  wrote scripts/eval_outputs/human/f1_nonmalignant_level3.png  (weighted-F1=0.929, macro-F1=0.712)
+  wrote scripts/eval_outputs/human/f1_combined_level3.png  (weighted-F1=0.921, macro-F1=0.681)
+  wrote scripts/eval_outputs/human/predictions.csv
+
+               task                                   test_datasets  weighted_f1  macro_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
+     root_malignant Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.980518  0.979150         0.981317      0.977131  0.980561  40999.0        2.0
+   malignant_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.953526  0.770307         0.823750      0.729252  0.955640  15329.0        3.0
+nonmalignant_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.928897  0.711933         0.735603      0.710758  0.932762  25670.0       22.0
+    combined_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.920734  0.681430         0.701792      0.686043  0.924023  40999.0       25.0
+
+Done. Checkpoints -> src/scpdac/models/classifier/human   |   evaluation -> scripts/eval_outputs/human

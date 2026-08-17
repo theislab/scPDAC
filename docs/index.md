@@ -45,8 +45,8 @@ pip install scpdac
   PDAC atlas end-to-end.
 - 🏷️ **[Hierarchical classifier tutorial](notebooks/classifier)** — annotate an
   unlabelled dataset in a single call.
-- 📊 **[Performance & limitations](performance)** — held-out benchmarks and, just
-  as importantly, where **not** to trust the models.
+- 📊 **[Performance & limitations](performance)** — benchmarks on held-out studies
+  and, just as importantly, where **not** to trust the models.
 - 📚 **[API reference](api)** — every public function and class in `scpdac`.
 
 ## Citation

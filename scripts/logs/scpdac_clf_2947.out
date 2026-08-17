@@ -1,0 +1,407 @@
+Mon Aug 17 08:44:57 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.173.02             Driver Version: 580.173.02     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    Off |   00000000:C1:00.0 Off |                    0 |
+| N/A   27C    P0             80W /  350W |       0MiB /  46068MiB |      2%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Reading atlas from /data/Daniele/atlases/final_versions_topublish/Human.zarr ...
+AnnData object with n_obs × n_vars = 1078316 × 2232
+    obs: 'Sample_ID', 'Condition', 'Treatment', 'TreatmentType', 'TreatmentStatus', 'Tissue', 'Sex', 'Dataset', 'Technology', 'Level_1', 'Level_2', 'Level_3', 'Level_4', 'Age', 'Diabetes', 'Is_Core', 'EMT category', 'Dataset_ID', 'Cluster_Names'
+    var: 'n_cells', 'ensembl_id', 'start', 'end', 'chromosome', 'gene_name_adata_sc', 'highly_variable_adata_sc', 'means_adata_sc', 'dispersions_adata_sc', 'dispersions_norm_adata_sc', 'highly_variable_nbatches_adata_sc', 'highly_variable_intersection_adata_sc', 'n_cells_by_counts_adata_sc', 'mean_counts_adata_sc', 'log1p_mean_counts_adata_sc', 'pct_dropout_by_counts_adata_sc', 'total_counts_adata_sc', 'log1p_total_counts_adata_sc', 'mito_adata_sc', 'n_cells_by_counts_adata_sn', 'mean_counts_adata_sn', 'log1p_mean_counts_adata_sn', 'pct_dropout_by_counts_adata_sn', 'total_counts_adata_sn', 'log1p_total_counts_adata_sn', 'Manual_Genes', 'mt', 'ribo', 'hb'
+    uns: 'Condition_colors', 'Is_Core_colors', 'Level_1_colors', 'Level_2_colors', 'Level_3_colors', 'Level_4_All_colors', 'Level_4_Final_colors', 'Level_4_colors', 'UMAP_0.75', 'UMAP_0.85', '_scvi_manager_uuid', '_scvi_uuid', 'neighbors', 'umap'
+    obsm: 'EMT score', 'EMT_score_DL', 'Global_Leiden', 'MALAT1_lognorm', 'UMAP_0.75', 'UMAP_0.85', 'UMAP_0.95', 'X_pca', 'X_umap', '_scvi_batch', '_scvi_labels', 'batch', 'bin_edges', 'cnv_score_abs', 'empty_droplet', 'infercnv_score_malignant', 'infercnv_score_malignant_refined', 'is_outlier_total_counts', 'leiden', 'leiden_0.2', 'leiden_0.2_annotation', 'leiden_0.5', 'leiden_subcluster', 'level0_leiden_subcluster', 'log1p_n_genes_by_counts', 'log1p_total_counts', 'log1p_total_counts_mito', 'log_counts', 'mt_frac', 'n_counts', 'n_genes', 'n_genes_by_counts', 'outlier', 'pct_counts_mito', 'scANVI_cross_species', 'scANVI_emb_final', 'scanvi_L4_emb', 'scanvi_extended_atlas_emb', 'total_counts', 'total_counts_mito'
+    layers: 'counts', 'log_norm', 'raw'
+    obsp: 'connectivities', 'distances'
+Training on 1078316 cells, 2232 genes, 28 Level-3 classes
+
+Held-out datasets: Kemp_2020, Schlesinger_2020
+1070215 train / 8101 held-out test cells
+Classes absent from the hold-out (not scored): Acinar Cell, Acinar Idling Cell, Alpha Cell, Pericyte, Smooth Muscle Cell
+  wrote scripts/eval_outputs/human/test_split.csv
+[1/3] root (Malignant vs Non-Malignant)
+  epoch 1/10  batch 0/3762  loss=0.794
+  epoch 1/10  batch 500/3762  loss=0.202
+  epoch 1/10  batch 1000/3762  loss=0.207
+  epoch 1/10  batch 1500/3762  loss=0.128
+  epoch 1/10  batch 2000/3762  loss=0.094
+  epoch 1/10  batch 2500/3762  loss=0.082
+  epoch 1/10  batch 3000/3762  loss=0.097
+  epoch 1/10  batch 3500/3762  loss=0.119
+  epoch 1/10  val_acc=0.953
+  epoch 2/10  batch 0/3762  loss=0.101
+  epoch 2/10  batch 500/3762  loss=0.087
+  epoch 2/10  batch 1000/3762  loss=0.128
+  epoch 2/10  batch 1500/3762  loss=0.109
+  epoch 2/10  batch 2000/3762  loss=0.126
+  epoch 2/10  batch 2500/3762  loss=0.098
+  epoch 2/10  batch 3000/3762  loss=0.088
+  epoch 2/10  batch 3500/3762  loss=0.081
+  epoch 2/10  val_acc=0.957
+  epoch 3/10  batch 0/3762  loss=0.106
+  epoch 3/10  batch 500/3762  loss=0.115
+  epoch 3/10  batch 1000/3762  loss=0.149
+  epoch 3/10  batch 1500/3762  loss=0.104
+  epoch 3/10  batch 2000/3762  loss=0.097
+  epoch 3/10  batch 2500/3762  loss=0.073
+  epoch 3/10  batch 3000/3762  loss=0.104
+  epoch 3/10  batch 3500/3762  loss=0.104
+  epoch 3/10  val_acc=0.958
+  epoch 4/10  batch 0/3762  loss=0.117
+  epoch 4/10  batch 500/3762  loss=0.118
+  epoch 4/10  batch 1000/3762  loss=0.054
+  epoch 4/10  batch 1500/3762  loss=0.097
+  epoch 4/10  batch 2000/3762  loss=0.085
+  epoch 4/10  batch 2500/3762  loss=0.093
+  epoch 4/10  batch 3000/3762  loss=0.081
+  epoch 4/10  batch 3500/3762  loss=0.062
+  epoch 4/10  val_acc=0.960
+  epoch 5/10  batch 0/3762  loss=0.038
+  epoch 5/10  batch 500/3762  loss=0.130
+  epoch 5/10  batch 1000/3762  loss=0.137
+  epoch 5/10  batch 1500/3762  loss=0.092
+  epoch 5/10  batch 2000/3762  loss=0.080
+  epoch 5/10  batch 2500/3762  loss=0.082
+  epoch 5/10  batch 3000/3762  loss=0.054
+  epoch 5/10  batch 3500/3762  loss=0.082
+  epoch 5/10  val_acc=0.960
+  epoch 6/10  batch 0/3762  loss=0.098
+  epoch 6/10  batch 500/3762  loss=0.045
+  epoch 6/10  batch 1000/3762  loss=0.086
+  epoch 6/10  batch 1500/3762  loss=0.109
+  epoch 6/10  batch 2000/3762  loss=0.068
+  epoch 6/10  batch 2500/3762  loss=0.107
+  epoch 6/10  batch 3000/3762  loss=0.110
+  epoch 6/10  batch 3500/3762  loss=0.064
+  epoch 6/10  val_acc=0.960
+  epoch 7/10  batch 0/3762  loss=0.073
+  epoch 7/10  batch 500/3762  loss=0.071
+  epoch 7/10  batch 1000/3762  loss=0.086
+  epoch 7/10  batch 1500/3762  loss=0.104
+  epoch 7/10  batch 2000/3762  loss=0.059
+  epoch 7/10  batch 2500/3762  loss=0.109
+  epoch 7/10  batch 3000/3762  loss=0.054
+  epoch 7/10  batch 3500/3762  loss=0.084
+  epoch 7/10  val_acc=0.961
+  epoch 8/10  batch 0/3762  loss=0.061
+  epoch 8/10  batch 500/3762  loss=0.117
+  epoch 8/10  batch 1000/3762  loss=0.051
+  epoch 8/10  batch 1500/3762  loss=0.030
+  epoch 8/10  batch 2000/3762  loss=0.062
+  epoch 8/10  batch 2500/3762  loss=0.054
+  epoch 8/10  batch 3000/3762  loss=0.141
+  epoch 8/10  batch 3500/3762  loss=0.066
+  epoch 8/10  val_acc=0.960
+  epoch 9/10  batch 0/3762  loss=0.072
+  epoch 9/10  batch 500/3762  loss=0.093
+  epoch 9/10  batch 1000/3762  loss=0.071
+  epoch 9/10  batch 1500/3762  loss=0.071
+  epoch 9/10  batch 2000/3762  loss=0.046
+  epoch 9/10  batch 2500/3762  loss=0.065
+  epoch 9/10  batch 3000/3762  loss=0.080
+  epoch 9/10  batch 3500/3762  loss=0.065
+  epoch 9/10  val_acc=0.960
+  epoch 10/10  batch 0/3762  loss=0.069
+  epoch 10/10  batch 500/3762  loss=0.064
+  epoch 10/10  batch 1000/3762  loss=0.069
+  epoch 10/10  batch 1500/3762  loss=0.066
+  epoch 10/10  batch 2000/3762  loss=0.045
+  epoch 10/10  batch 2500/3762  loss=0.050
+  epoch 10/10  batch 3000/3762  loss=0.039
+  epoch 10/10  batch 3500/3762  loss=0.089
+  epoch 10/10  val_acc=0.960
+Saved root.pt (2 classes, val_acc=0.961)
+[2/3] malignant sub-classifier
+  epoch 1/10  batch 0/1314  loss=1.233
+  epoch 1/10  batch 500/1314  loss=0.223
+  epoch 1/10  batch 1000/1314  loss=0.151
+  epoch 1/10  val_acc=0.944
+  epoch 2/10  batch 0/1314  loss=0.148
+  epoch 2/10  batch 500/1314  loss=0.134
+  epoch 2/10  batch 1000/1314  loss=0.162
+  epoch 2/10  val_acc=0.946
+  epoch 3/10  batch 0/1314  loss=0.139
+  epoch 3/10  batch 500/1314  loss=0.096
+  epoch 3/10  batch 1000/1314  loss=0.116
+  epoch 3/10  val_acc=0.948
+  epoch 4/10  batch 0/1314  loss=0.049
+  epoch 4/10  batch 500/1314  loss=0.104
+  epoch 4/10  batch 1000/1314  loss=0.115
+  epoch 4/10  val_acc=0.950
+  epoch 5/10  batch 0/1314  loss=0.081
+  epoch 5/10  batch 500/1314  loss=0.091
+  epoch 5/10  batch 1000/1314  loss=0.073
+  epoch 5/10  val_acc=0.951
+  epoch 6/10  batch 0/1314  loss=0.112
+  epoch 6/10  batch 500/1314  loss=0.063
+  epoch 6/10  batch 1000/1314  loss=0.152
+  epoch 6/10  val_acc=0.952
+  epoch 7/10  batch 0/1314  loss=0.051
+  epoch 7/10  batch 500/1314  loss=0.065
+  epoch 7/10  batch 1000/1314  loss=0.067
+  epoch 7/10  val_acc=0.950
+  epoch 8/10  batch 0/1314  loss=0.067
+  epoch 8/10  batch 500/1314  loss=0.071
+  epoch 8/10  batch 1000/1314  loss=0.034
+  epoch 8/10  val_acc=0.951
+  epoch 9/10  batch 0/1314  loss=0.048
+  epoch 9/10  batch 500/1314  loss=0.067
+  epoch 9/10  batch 1000/1314  loss=0.068
+  epoch 9/10  val_acc=0.952
+  epoch 10/10  batch 0/1314  loss=0.044
+  epoch 10/10  batch 500/1314  loss=0.024
+  epoch 10/10  batch 1000/1314  loss=0.034
+  epoch 10/10  val_acc=0.952
+Saved malignant.pt (3 classes, val_acc=0.952)
+[3/3] non-malignant sub-classifier
+  epoch 1/10  batch 0/2447  loss=3.421
+  epoch 1/10  batch 500/2447  loss=0.481
+  epoch 1/10  batch 1000/2447  loss=0.444
+  epoch 1/10  batch 1500/2447  loss=0.442
+  epoch 1/10  batch 2000/2447  loss=0.288
+  epoch 1/10  val_acc=0.884
+  epoch 2/10  batch 0/2447  loss=0.360
+  epoch 2/10  batch 500/2447  loss=0.344
+  epoch 2/10  batch 1000/2447  loss=0.451
+  epoch 2/10  batch 1500/2447  loss=0.451
+  epoch 2/10  batch 2000/2447  loss=0.284
+  epoch 2/10  val_acc=0.887
+  epoch 3/10  batch 0/2447  loss=0.450
+  epoch 3/10  batch 500/2447  loss=0.453
+  epoch 3/10  batch 1000/2447  loss=0.444
+  epoch 3/10  batch 1500/2447  loss=0.325
+  epoch 3/10  batch 2000/2447  loss=0.255
+  epoch 3/10  val_acc=0.892
+  epoch 4/10  batch 0/2447  loss=0.290
+  epoch 4/10  batch 500/2447  loss=0.353
+  epoch 4/10  batch 1000/2447  loss=0.347
+  epoch 4/10  batch 1500/2447  loss=0.331
+  epoch 4/10  batch 2000/2447  loss=0.324
+  epoch 4/10  val_acc=0.892
+  epoch 5/10  batch 0/2447  loss=0.313
+  epoch 5/10  batch 500/2447  loss=0.276
+  epoch 5/10  batch 1000/2447  loss=0.307
+  epoch 5/10  batch 1500/2447  loss=0.312
+  epoch 5/10  batch 2000/2447  loss=0.397
+  epoch 5/10  val_acc=0.894
+  epoch 6/10  batch 0/2447  loss=0.265
+  epoch 6/10  batch 500/2447  loss=0.237
+  epoch 6/10  batch 1000/2447  loss=0.277
+  epoch 6/10  batch 1500/2447  loss=0.256
+  epoch 6/10  batch 2000/2447  loss=0.277
+  epoch 6/10  val_acc=0.895
+  epoch 7/10  batch 0/2447  loss=0.337
+  epoch 7/10  batch 500/2447  loss=0.236
+  epoch 7/10  batch 1000/2447  loss=0.226
+  epoch 7/10  batch 1500/2447  loss=0.382
+  epoch 7/10  batch 2000/2447  loss=0.380
+  epoch 7/10  val_acc=0.895
+  epoch 8/10  batch 0/2447  loss=0.254
+  epoch 8/10  batch 500/2447  loss=0.229
+  epoch 8/10  batch 1000/2447  loss=0.250
+  epoch 8/10  batch 1500/2447  loss=0.357
+  epoch 8/10  batch 2000/2447  loss=0.269
+  epoch 8/10  val_acc=0.895
+  epoch 9/10  batch 0/2447  loss=0.228
+  epoch 9/10  batch 500/2447  loss=0.285
+  epoch 9/10  batch 1000/2447  loss=0.371
+  epoch 9/10  batch 1500/2447  loss=0.268
+  epoch 9/10  batch 2000/2447  loss=0.233
+  epoch 9/10  val_acc=0.896
+  epoch 10/10  batch 0/2447  loss=0.229
+  epoch 10/10  batch 500/2447  loss=0.255
+  epoch 10/10  batch 1000/2447  loss=0.347
+  epoch 10/10  batch 1500/2447  loss=0.307
+  epoch 10/10  batch 2000/2447  loss=0.340
+  epoch 10/10  val_acc=0.896
+Saved nonmalignant.pt (25 classes, val_acc=0.896)
+
+Evaluating on 8101 held-out cells; writing plots to scripts/eval_outputs/human
+  wrote scripts/eval_outputs/human/f1_root.png  (macro-F1=0.973, weighted-F1=0.975)
+  wrote scripts/eval_outputs/human/f1_malignant_level3.png  (macro-F1=0.731, weighted-F1=0.886)
+  wrote scripts/eval_outputs/human/f1_nonmalignant_level3.png  (macro-F1=0.688, weighted-F1=0.924)
+  wrote scripts/eval_outputs/human/f1_combined_level3.png  (macro-F1=0.655, weighted-F1=0.891)
+
+               task              test_datasets  macro_f1  weighted_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
+     root_malignant Kemp_2020|Schlesinger_2020  0.972620     0.974617         0.975633      0.969862  0.974694   8101.0        2.0
+   malignant_level3 Kemp_2020|Schlesinger_2020  0.730894     0.886206         0.793312      0.688672  0.892509   2977.0        3.0
+nonmalignant_level3 Kemp_2020|Schlesinger_2020  0.688136     0.924219         0.731718      0.681453  0.927986   5124.0       20.0
+    combined_level3 Kemp_2020|Schlesinger_2020  0.654556     0.890910         0.708837      0.649864  0.894581   8101.0       23.0
+
+Done. Checkpoints -> src/scpdac/models/classifier/human   |   evaluation -> scripts/eval_outputs/human
+Reading atlas from /data/Daniele/atlases/final_versions_topublish/Mouse.zarr ...
+AnnData object with n_obs × n_vars = 602670 × 2232
+    obs: 'Sample_ID', 'Condition', 'Treatment', 'TreatmentType', 'TreatmentStatus', 'Tissue', 'Sex', 'Dataset', 'Technology', 'Level_1', 'Level_2', 'Level_3', 'Level_4', 'Model', 'Barcoded', 'Strain', 'Genotype', 'Larry_positive', 'Provenance'
+    var: 'manual_gene'
+    uns: 'Level_1_final_colors', 'Level_1_refined_colors', 'Level_2_colors', 'Level_2_final_colors', 'Level_3_colors', 'Level_3_final_colors', 'Level_4_final_colors', 'Level_4_knn_colors', 'log1p', 'neighbors', 'umap'
+    obsm: 'Cell_filtering', 'DRVI_emb', 'X_pca', 'X_scANVI', 'X_umap', 'X_umap_circle', 'batch', 'bin_edges', 'expiMAP_emb', 'leiden', 'leiden_0.5', 'leiden_1.0', 'leiden_1.5', 'leiden_endothelial_level_1', 'leiden_epithelial_level_1', 'leiden_fibroblast_level_1', 'leiden_lymphoid_level_1', 'leiden_myeloid_level_1', 'log1p_n_genes_by_counts', 'log1p_total_counts', 'log1p_total_counts_hb', 'log1p_total_counts_malat', 'log1p_total_counts_mt', 'log1p_total_counts_ribo', 'n_genes_by_counts', 'outlier', 'pct_counts_hb', 'pct_counts_in_top_20_genes', 'pct_counts_malat', 'pct_counts_mt', 'pct_counts_ribo', 'scANVI_cross_species', 'scANVI_emb', 'scANVI_emb_final', 'scANVI_emb_final ', 'scPOLI_emb', 'scVI_emb', 'total_counts', 'total_counts_hb', 'total_counts_malat', 'total_counts_mt', 'total_counts_ribo'
+    layers: 'binned_data', 'counts', 'log_norm'
+    obsp: 'connectivities', 'distances'
+Training on 602670 cells, 2232 genes, 27 Level-3 classes
+
+Held-out datasets: Chen_2021, Erdem_2024
+581841 train / 20829 held-out test cells
+  wrote scripts/eval_outputs/mouse/test_split.csv
+[1/3] root (Malignant vs Non-Malignant)
+  epoch 1/10  batch 0/2045  loss=1.185
+  epoch 1/10  batch 500/2045  loss=0.025
+  epoch 1/10  batch 1000/2045  loss=0.033
+  epoch 1/10  batch 1500/2045  loss=0.009
+  epoch 1/10  batch 2000/2045  loss=0.021
+  epoch 1/10  val_acc=0.992
+  epoch 2/10  batch 0/2045  loss=0.022
+  epoch 2/10  batch 500/2045  loss=0.007
+  epoch 2/10  batch 1000/2045  loss=0.026
+  epoch 2/10  batch 1500/2045  loss=0.007
+  epoch 2/10  batch 2000/2045  loss=0.050
+  epoch 2/10  val_acc=0.993
+  epoch 3/10  batch 0/2045  loss=0.023
+  epoch 3/10  batch 500/2045  loss=0.086
+  epoch 3/10  batch 1000/2045  loss=0.018
+  epoch 3/10  batch 1500/2045  loss=0.051
+  epoch 3/10  batch 2000/2045  loss=0.012
+  epoch 3/10  val_acc=0.992
+  epoch 4/10  batch 0/2045  loss=0.024
+  epoch 4/10  batch 500/2045  loss=0.009
+  epoch 4/10  batch 1000/2045  loss=0.014
+  epoch 4/10  batch 1500/2045  loss=0.039
+  epoch 4/10  batch 2000/2045  loss=0.015
+  epoch 4/10  val_acc=0.993
+  epoch 5/10  batch 0/2045  loss=0.010
+  epoch 5/10  batch 500/2045  loss=0.001
+  epoch 5/10  batch 1000/2045  loss=0.015
+  epoch 5/10  batch 1500/2045  loss=0.002
+  epoch 5/10  batch 2000/2045  loss=0.024
+  epoch 5/10  val_acc=0.992
+  epoch 6/10  batch 0/2045  loss=0.033
+  epoch 6/10  batch 500/2045  loss=0.040
+  epoch 6/10  batch 1000/2045  loss=0.002
+  epoch 6/10  batch 1500/2045  loss=0.007
+  epoch 6/10  batch 2000/2045  loss=0.002
+  epoch 6/10  val_acc=0.993
+  epoch 7/10  batch 0/2045  loss=0.010
+  epoch 7/10  batch 500/2045  loss=0.006
+  epoch 7/10  batch 1000/2045  loss=0.009
+  epoch 7/10  batch 1500/2045  loss=0.008
+  epoch 7/10  batch 2000/2045  loss=0.005
+  epoch 7/10  val_acc=0.993
+  epoch 8/10  batch 0/2045  loss=0.003
+  epoch 8/10  batch 500/2045  loss=0.010
+  epoch 8/10  batch 1000/2045  loss=0.006
+  epoch 8/10  batch 1500/2045  loss=0.000
+  epoch 8/10  batch 2000/2045  loss=0.019
+  epoch 8/10  val_acc=0.993
+  epoch 9/10  batch 0/2045  loss=0.003
+  epoch 9/10  batch 500/2045  loss=0.006
+  epoch 9/10  batch 1000/2045  loss=0.002
+  epoch 9/10  batch 1500/2045  loss=0.017
+  epoch 9/10  batch 2000/2045  loss=0.003
+  epoch 9/10  val_acc=0.993
+  epoch 10/10  batch 0/2045  loss=0.005
+  epoch 10/10  batch 500/2045  loss=0.002
+  epoch 10/10  batch 1000/2045  loss=0.001
+  epoch 10/10  batch 1500/2045  loss=0.009
+  epoch 10/10  batch 2000/2045  loss=0.004
+  epoch 10/10  val_acc=0.993
+Saved root.pt (2 classes, val_acc=0.993)
+[2/3] malignant sub-classifier
+  epoch 1/10  batch 0/436  loss=1.249
+  epoch 1/10  val_acc=0.895
+  epoch 2/10  batch 0/436  loss=0.254
+  epoch 2/10  val_acc=0.918
+  epoch 3/10  batch 0/436  loss=0.201
+  epoch 3/10  val_acc=0.925
+  epoch 4/10  batch 0/436  loss=0.190
+  epoch 4/10  val_acc=0.926
+  epoch 5/10  batch 0/436  loss=0.161
+  epoch 5/10  val_acc=0.925
+  epoch 6/10  batch 0/436  loss=0.145
+  epoch 6/10  val_acc=0.921
+  epoch 7/10  batch 0/436  loss=0.127
+  epoch 7/10  val_acc=0.933
+  epoch 8/10  batch 0/436  loss=0.116
+  epoch 8/10  val_acc=0.928
+  epoch 9/10  batch 0/436  loss=0.150
+  epoch 9/10  val_acc=0.917
+  epoch 10/10  batch 0/436  loss=0.051
+  epoch 10/10  val_acc=0.934
+Saved malignant.pt (3 classes, val_acc=0.934)
+[3/3] non-malignant sub-classifier
+  epoch 1/10  batch 0/1608  loss=3.314
+  epoch 1/10  batch 500/1608  loss=0.559
+  epoch 1/10  batch 1000/1608  loss=0.394
+  epoch 1/10  batch 1500/1608  loss=0.519
+  epoch 1/10  val_acc=0.869
+  epoch 2/10  batch 0/1608  loss=0.372
+  epoch 2/10  batch 500/1608  loss=0.469
+  epoch 2/10  batch 1000/1608  loss=0.320
+  epoch 2/10  batch 1500/1608  loss=0.367
+  epoch 2/10  val_acc=0.882
+  epoch 3/10  batch 0/1608  loss=0.358
+  epoch 3/10  batch 500/1608  loss=0.421
+  epoch 3/10  batch 1000/1608  loss=0.397
+  epoch 3/10  batch 1500/1608  loss=0.367
+  epoch 3/10  val_acc=0.887
+  epoch 4/10  batch 0/1608  loss=0.412
+  epoch 4/10  batch 500/1608  loss=0.394
+  epoch 4/10  batch 1000/1608  loss=0.390
+  epoch 4/10  batch 1500/1608  loss=0.328
+  epoch 4/10  val_acc=0.892
+  epoch 5/10  batch 0/1608  loss=0.265
+  epoch 5/10  batch 500/1608  loss=0.297
+  epoch 5/10  batch 1000/1608  loss=0.235
+  epoch 5/10  batch 1500/1608  loss=0.316
+  epoch 5/10  val_acc=0.891
+  epoch 6/10  batch 0/1608  loss=0.218
+  epoch 6/10  batch 500/1608  loss=0.327
+  epoch 6/10  batch 1000/1608  loss=0.342
+  epoch 6/10  batch 1500/1608  loss=0.385
+  epoch 6/10  val_acc=0.893
+  epoch 7/10  batch 0/1608  loss=0.299
+  epoch 7/10  batch 500/1608  loss=0.257
+  epoch 7/10  batch 1000/1608  loss=0.295
+  epoch 7/10  batch 1500/1608  loss=0.289
+  epoch 7/10  val_acc=0.895
+  epoch 8/10  batch 0/1608  loss=0.297
+  epoch 8/10  batch 500/1608  loss=0.323
+  epoch 8/10  batch 1000/1608  loss=0.308
+  epoch 8/10  batch 1500/1608  loss=0.248
+  epoch 8/10  val_acc=0.894
+  epoch 9/10  batch 0/1608  loss=0.292
+  epoch 9/10  batch 500/1608  loss=0.270
+  epoch 9/10  batch 1000/1608  loss=0.287
+  epoch 9/10  batch 1500/1608  loss=0.341
+  epoch 9/10  val_acc=0.893
+  epoch 10/10  batch 0/1608  loss=0.264
+  epoch 10/10  batch 500/1608  loss=0.225
+  epoch 10/10  batch 1000/1608  loss=0.217
+  epoch 10/10  batch 1500/1608  loss=0.263
+  epoch 10/10  val_acc=0.895
+Saved nonmalignant.pt (24 classes, val_acc=0.895)
+
+Evaluating on 20829 held-out cells; writing plots to scripts/eval_outputs/mouse
+  wrote scripts/eval_outputs/mouse/f1_root.png  (macro-F1=0.980, weighted-F1=0.985)
+  wrote scripts/eval_outputs/mouse/f1_malignant_level3.png  (macro-F1=0.632, weighted-F1=0.992)
+  wrote scripts/eval_outputs/mouse/f1_nonmalignant_level3.png  (macro-F1=0.625, weighted-F1=0.918)
+  wrote scripts/eval_outputs/mouse/f1_combined_level3.png  (macro-F1=0.598, weighted-F1=0.925)
+
+               task        test_datasets  macro_f1  weighted_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
+     root_malignant Chen_2021|Erdem_2024  0.979663     0.985030         0.979087      0.980243  0.985021  20829.0        2.0
+   malignant_level3 Chen_2021|Erdem_2024  0.632367     0.992108         0.631876      0.695845  0.992688   5060.0        3.0
+nonmalignant_level3 Chen_2021|Erdem_2024  0.624718     0.918149         0.641351      0.646173  0.919843  15769.0       24.0
+    combined_level3 Chen_2021|Erdem_2024  0.597528     0.925111         0.615984      0.611110  0.926785  20829.0       27.0
+
+Done. Checkpoints -> src/scpdac/models/classifier/mouse   |   evaluation -> scripts/eval_outputs/mouse

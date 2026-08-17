@@ -1,0 +1,9 @@
+dataset,n_cells,split
+Rupert_2025,30147,test
+Han_2023,26872,test
+Erdem_2024,10514,test
+Chen_2021,10315,test
+in_house,393742,train
+Chen_2024,46084,train
+Carstens_2021,45043,train
+Donahue_2024,39953,train
