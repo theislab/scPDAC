@@ -1,6 +1,6 @@
 # scPDAC
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/MDLDan/scPDAC/test.yaml?branch=main)](https://github.com/MDLDan/scPDAC/actions/workflows/test.yaml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/theislab/scPDAC/test.yaml?branch=main)](https://github.com/theislab/scPDAC/actions/workflows/test.yaml)
 [![Documentation](https://img.shields.io/readthedocs/scPDAC)](https://scPDAC.readthedocs.io)
 
 **scPDAC** maps and annotates single-cell RNA-seq data against pancreatic ductal
@@ -61,7 +61,7 @@ If you use **scPDAC** in your research, please cite {cite:t}`Lucarelli2026`:
 ## Getting help
 
 For questions, help requests, or to report a bug, please open an issue on the
-[issue tracker](https://github.com/MDLDan/scPDAC/issues).
+[issue tracker](https://github.com/theislab/scPDAC/issues).
 
 [uv]: https://github.com/astral-sh/uv
 
