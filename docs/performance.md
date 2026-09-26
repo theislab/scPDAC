@@ -1,7 +1,7 @@
 # Classifier performance & limitations
 
 Every number on this page is computed on a **held-out set of whole datasets**:
-Two studies from each atlas are withheld from training entirely, so no
+Four studies from each atlas are withheld from training entirely, so no
 study contributes cells to training. The models are then scored on
 donors, protocols, and batches they have never seen, which makes these numbers a
 **cross-study transfer** estimate rather than an in-distribution ceiling.
@@ -19,7 +19,7 @@ resolution.
 ## The held-out datasets
 
 The split is made by `scripts/train_classifier.py`, which ranks
-`adata.obs['Dataset']` by cell count and holds out the two smallest studies. The
+`adata.obs['Dataset']` by cell count and holds out four studies. The
 full ranking, with each dataset's role, is written to
 `scripts/eval_outputs/<species>/test_split.csv`, and the held-out names are also
 stored inside every `.pt` checkpoint under `test_datasets`.
