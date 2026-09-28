@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning][].
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [0.1.1]
+
+### Added
+
+- `return_uncertainties` option for `tl.predict_labels` and
+  `HierarchicalClassifier.predict`, reporting per-cell label uncertainty as
+  normalised softmax entropy (`obs["predicted_malignant_uncertainty_score"]`,
+  `obs["predicted_celltype_uncertainty_score"]`). Off by default.
+
 ## [0.1.0]
 
 ### Added

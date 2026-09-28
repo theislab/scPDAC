@@ -114,6 +114,18 @@ def _features(adata: AnnData, genes: list[str], layer: str, device: str = "cpu")
     return torch.as_tensor(np.asarray(mat, dtype=np.float32), device=device)
 
 
+def _softmax_entropy(logits: torch.Tensor) -> torch.Tensor:
+    """Per-row softmax entropy of ``logits``, normalised to ``[0, 1]`` by ``log(n_classes)``.
+
+    Normalising makes scores comparable between models with different numbers of
+    classes (e.g. the malignant and non-malignant sub-classifiers).
+    """
+    log_p = torch.log_softmax(logits, dim=1)
+    entropy = -(log_p.exp() * log_p).sum(dim=1)
+    n_classes = logits.shape[1]
+    return entropy / np.log(n_classes) if n_classes > 1 else torch.zeros_like(entropy)
+
+
 class HierarchicalClassifier:
     """Wraps the three MLPs of the hierarchical classifier for one species.
 
@@ -147,30 +159,58 @@ class HierarchicalClassifier:
         ckpts = load_classifier_checkpoints(species, map_location=device)
         return cls(ckpts["root"], ckpts["malignant"], ckpts["non_malignant"], device=device)
 
-    def _predict_one(self, model: MLP, ckpt: dict, adata: AnnData, layer: str) -> np.ndarray:
+    def _predict_one(self, model: MLP, ckpt: dict, adata: AnnData, layer: str) -> tuple[np.ndarray, np.ndarray]:
+        """Return ``(labels, uncertainty)`` for one model; see :func:`_softmax_entropy`."""
         feats = _features(adata, ckpt["genes"], layer, self.device)
         with torch.no_grad():
-            idx = model(feats).argmax(dim=1).cpu().numpy()
-        return np.asarray(ckpt["classes"])[idx]
+            logits = model(feats)
+            idx = logits.argmax(dim=1).cpu().numpy()
+            uncertainty = _softmax_entropy(logits).cpu().numpy()
+        return np.asarray(ckpt["classes"])[idx], uncertainty
 
-    def predict(self, adata: AnnData, layer: str = "log1p_norm") -> tuple[np.ndarray, np.ndarray]:
+    def predict(
+        self,
+        adata: AnnData,
+        layer: str = "log1p_norm",
+        return_uncertainties: bool = False,
+    ) -> tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Run the 2-step hierarchy.
+
+        Parameters
+        ----------
+        adata
+            Query data.
+        layer
+            Layer holding the log-normalised counts.
+        return_uncertainties
+            If ``True``, also return per-cell label uncertainties, estimated as the
+            normalised softmax entropy of the model that produced each label
+            (``0`` = fully confident, ``1`` = uniform over classes).
 
         Returns
         -------
         A tuple ``(malignant_labels, celltype_labels)`` of length ``adata.n_obs``.
+        If ``return_uncertainties`` is ``True``, the tuple is
+        ``(malignant_labels, celltype_labels, malignant_uncertainty, celltype_uncertainty)``,
+        where ``malignant_uncertainty`` comes from the root model and
+        ``celltype_uncertainty`` from whichever sub-classifier each cell was routed to.
         """
-        root_labels = self._predict_one(self.root, self._ckpts["root"], adata, layer)
+        root_labels, malignant_uncertainty = self._predict_one(self.root, self._ckpts["root"], adata, layer)
         mal_mask = derive_malignant_mask(root_labels)
 
         celltype = np.empty(adata.n_obs, dtype=object)
+        celltype_uncertainty = np.full(adata.n_obs, np.nan, dtype=np.float32)
         if mal_mask.any():
-            celltype[mal_mask] = self._predict_one(self.malignant, self._ckpts["malignant"], adata[mal_mask], layer)
+            celltype[mal_mask], celltype_uncertainty[mal_mask] = self._predict_one(
+                self.malignant, self._ckpts["malignant"], adata[mal_mask], layer
+            )
         if (~mal_mask).any():
-            celltype[~mal_mask] = self._predict_one(
+            celltype[~mal_mask], celltype_uncertainty[~mal_mask] = self._predict_one(
                 self.non_malignant, self._ckpts["non_malignant"], adata[~mal_mask], layer
             )
         malignant_labels = np.where(mal_mask, MALIGNANT, NON_MALIGNANT)
+        if return_uncertainties:
+            return malignant_labels, celltype.astype(str), malignant_uncertainty, celltype_uncertainty
         return malignant_labels, celltype.astype(str)
 
 
@@ -180,6 +220,7 @@ def predict_labels(
     *,
     layer: str = "log1p_norm",
     device: str = "cpu",
+    return_uncertainties: bool = False,
 ) -> AnnData:
     """Predict hierarchical Level-4 cell-type labels for a query dataset.
 
@@ -198,14 +239,30 @@ def predict_labels(
         Layer holding the log-normalised counts (``"log1p_norm"`` by default).
     device
         Torch device for inference.
+    return_uncertainties
+        If ``True``, also store per-cell label uncertainties (normalised softmax
+        entropy in ``[0, 1]``; higher means less confident) in
+        ``obs["predicted_malignant_uncertainty_score"]`` (root model) and
+        ``obs["predicted_celltype_uncertainty_score"]`` (routed sub-classifier).
 
     Returns
     -------
     The input ``adata`` with ``obs["predicted_malignant"]`` (``Malignant`` /
-    ``Non-Malignant``) and ``obs["predicted_celltype"]`` (Level-4 labels).
+    ``Non-Malignant``) and ``obs["predicted_celltype"]`` (Level-4 labels), plus
+    the two uncertainty columns if ``return_uncertainties`` is ``True``.
     """
     clf = HierarchicalClassifier.from_species(species, device=device)
-    malignant_labels, celltype = clf.predict(adata, layer=layer)
+    if not return_uncertainties:
+        malignant_labels, celltype = clf.predict(adata, layer=layer)
+        adata.obs["predicted_malignant"] = pd.Categorical(malignant_labels)
+        adata.obs["predicted_celltype"] = pd.Categorical(celltype)
+        return adata
+
+    malignant_labels, celltype, malignant_uncertainty, celltype_uncertainty = clf.predict(
+        adata, layer=layer, return_uncertainties=True
+    )
     adata.obs["predicted_malignant"] = pd.Categorical(malignant_labels)
     adata.obs["predicted_celltype"] = pd.Categorical(celltype)
+    adata.obs["predicted_malignant_uncertainty_score"] = malignant_uncertainty
+    adata.obs["predicted_celltype_uncertainty_score"] = celltype_uncertainty
     return adata
