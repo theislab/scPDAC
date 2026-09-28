@@ -4,7 +4,7 @@ requires = [ "hatchling" ]
 
 [project]
 name = "scpdac"
-version = "0.1.0"
+version = "0.1.1"
 description = "Mapping single cell data into PDAC atlases"
 readme = "README.md"
 license = { file = "LICENSE" }
