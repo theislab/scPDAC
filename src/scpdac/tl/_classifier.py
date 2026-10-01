@@ -4,8 +4,8 @@ A 3-model, 2-step hierarchy operating on log-normalised expression
 (``adata.layers["log1p_norm"]`` by default, **not** binned data):
 
 1. **Root** — binary ``Malignant`` vs ``Non-Malignant``.
-2. **Malignant sub-classifier** — Level-4 labels for malignant cells.
-3. **Non-malignant sub-classifier** — Level-4 labels for non-malignant cells.
+2. **Malignant sub-classifier** — Level-3 labels for malignant cells.
+3. **Non-malignant sub-classifier** — Level-3 labels for non-malignant cells.
 
 Cells are routed through step 2 based on the step-1 prediction.
 """
@@ -62,9 +62,9 @@ class MLP(nn.Module):
 
 
 def is_malignant_label(label: str) -> bool:
-    """Return ``True`` if a Level-4 label denotes a malignant population.
+    """Return ``True`` if a Level-3 label denotes a malignant population.
 
-    Malignant Level-4 cell types in the atlas always carry ``"Malignant"`` in
+    Malignant Level-3 cell types in the atlas always carry ``"Malignant"`` in
     their name (e.g. ``"Malignant Basal"``), so membership is a simple substring
     test. The explicit ``"Non-Malignant"`` label (emitted by the root classifier)
     is excluded, since it also contains the substring ``"Malignant"``.
@@ -73,19 +73,20 @@ def is_malignant_label(label: str) -> bool:
     return "Malignant" in s and "Non-Malignant" not in s
 
 
-def derive_malignant_mask(level4: pd.Series | np.ndarray | list) -> np.ndarray:
-    """Derive a boolean malignant mask from Level-4 labels.
+
+def derive_malignant_mask(level3: pd.Series | np.ndarray | list) -> np.ndarray:
+    """Derive a boolean malignant mask from Level-3 labels.
 
     Parameters
     ----------
-    level4
-        Per-cell Level-4 label values.
+    level3
+        Per-cell Level-3 label values.
 
     Returns
     -------
     Boolean array, ``True`` where the label is malignant.
     """
-    return np.array([is_malignant_label(v) for v in np.asarray(level4)])
+    return np.array([is_malignant_label(v) for v in np.asarray(level3)])
 
 
 def _load_mlp(ckpt: dict, device: str = "cpu") -> MLP:
@@ -137,9 +138,9 @@ class HierarchicalClassifier:
     root
         Checkpoint dict for the root (malignant vs non-malignant) model.
     malignant
-        Checkpoint dict for the malignant Level-4 sub-classifier.
+        Checkpoint dict for the malignant Level-3 sub-classifier.
     non_malignant
-        Checkpoint dict for the non-malignant Level-4 sub-classifier.
+        Checkpoint dict for the non-malignant Level-3 sub-classifier.
     device
         Torch device to run inference on.
     """
@@ -222,9 +223,9 @@ def predict_labels(
     device: str = "cpu",
     return_uncertainties: bool = False,
 ) -> AnnData:
-    """Predict hierarchical Level-4 cell-type labels for a query dataset.
+    """Predict hierarchical Level-3 cell-type labels for a query dataset.
 
-    Routes cells through the root classifier then the matching Level-4
+    Routes cells through the root classifier then the matching Level-3
     sub-classifier, appending predictions to ``adata.obs`` in place.
 
     Parameters
@@ -248,7 +249,7 @@ def predict_labels(
     Returns
     -------
     The input ``adata`` with ``obs["predicted_malignant"]`` (``Malignant`` /
-    ``Non-Malignant``) and ``obs["predicted_celltype"]`` (Level-4 labels), plus
+    ``Non-Malignant``) and ``obs["predicted_celltype"]`` (Level-3 labels), plus
     the two uncertainty columns if ``return_uncertainties`` is ``True``.
     """
     clf = HierarchicalClassifier.from_species(species, device=device)

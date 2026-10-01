@@ -26,7 +26,7 @@ stored inside every `.pt` checkpoint under `test_datasets`.
 
 | Species | Held-out datasets | Test cells |
 | --- | --- | ---: |
-| Human | `Kemp_2020`, `Schlesinger_2020`, `Lin_2020`, `Elyada_2019` | 40,999 |
+| Human | `kemp_2021`, `Schlesinger_2020`, `Lin_2020`, `Elyada_2019` | 40,999 |
 | Mouse | `Chen_2021`, `Erdem_2024`, `Han_2023`, `Rupert_2025` | 77,848 |
 
 ## Headline metrics

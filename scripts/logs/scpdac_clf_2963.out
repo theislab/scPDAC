@@ -282,7 +282,7 @@ AnnData object with n_obs × n_vars = 1078316 × 2232
     obsp: 'connectivities', 'distances'
 Training on 1078316 cells, 2232 genes, 28 Level-3 classes
 
-Held-out datasets: Kemp_2020, Schlesinger_2020, Lin_2020, Elyada_2019
+Held-out datasets: kemp_2021, Schlesinger_2020, Lin_2020, Elyada_2019
 1037317 train / 40999 held-out test cells
 Classes absent from the hold-out (not scored): Alpha Cell, Pericyte, Smooth Muscle Cell
   wrote scripts/eval_outputs/human/test_split.csv
@@ -681,9 +681,9 @@ Evaluating on 40999 held-out cells; writing plots to scripts/eval_outputs/human
   wrote scripts/eval_outputs/human/predictions.csv
 
                task                                   test_datasets  weighted_f1  macro_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
-     root_malignant Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.980518  0.979150         0.981317      0.977131  0.980561  40999.0        2.0
-   malignant_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.953526  0.770307         0.823750      0.729252  0.955640  15329.0        3.0
-nonmalignant_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.928897  0.711933         0.735603      0.710758  0.932762  25670.0       22.0
-    combined_level3 Kemp_2020|Schlesinger_2020|Lin_2020|Elyada_2019     0.920734  0.681430         0.701792      0.686043  0.924023  40999.0       25.0
+     root_malignant kemp_2021|Schlesinger_2020|Lin_2020|Elyada_2019     0.980518  0.979150         0.981317      0.977131  0.980561  40999.0        2.0
+   malignant_level3 kemp_2021|Schlesinger_2020|Lin_2020|Elyada_2019     0.953526  0.770307         0.823750      0.729252  0.955640  15329.0        3.0
+nonmalignant_level3 kemp_2021|Schlesinger_2020|Lin_2020|Elyada_2019     0.928897  0.711933         0.735603      0.710758  0.932762  25670.0       22.0
+    combined_level3 kemp_2021|Schlesinger_2020|Lin_2020|Elyada_2019     0.920734  0.681430         0.701792      0.686043  0.924023  40999.0       25.0
 
 Done. Checkpoints -> src/scpdac/models/classifier/human   |   evaluation -> scripts/eval_outputs/human

@@ -28,7 +28,7 @@ AnnData object with n_obs × n_vars = 1078316 × 2232
     obsp: 'connectivities', 'distances'
 Training on 1078316 cells, 2232 genes, 28 Level-3 classes
 
-Held-out datasets: Kemp_2020, Schlesinger_2020
+Held-out datasets: kemp_2021, Schlesinger_2020
 1070215 train / 8101 held-out test cells
 Classes absent from the hold-out (not scored): Acinar Cell, Acinar Idling Cell, Alpha Cell, Pericyte, Smooth Muscle Cell
   wrote scripts/eval_outputs/human/test_split.csv
@@ -236,10 +236,10 @@ Evaluating on 8101 held-out cells; writing plots to scripts/eval_outputs/human
   wrote scripts/eval_outputs/human/f1_combined_level3.png  (macro-F1=0.655, weighted-F1=0.891)
 
                task              test_datasets  macro_f1  weighted_f1  macro_precision  macro_recall  accuracy  n_cells  n_classes
-     root_malignant Kemp_2020|Schlesinger_2020  0.972620     0.974617         0.975633      0.969862  0.974694   8101.0        2.0
-   malignant_level3 Kemp_2020|Schlesinger_2020  0.730894     0.886206         0.793312      0.688672  0.892509   2977.0        3.0
-nonmalignant_level3 Kemp_2020|Schlesinger_2020  0.688136     0.924219         0.731718      0.681453  0.927986   5124.0       20.0
-    combined_level3 Kemp_2020|Schlesinger_2020  0.654556     0.890910         0.708837      0.649864  0.894581   8101.0       23.0
+     root_malignant kemp_2021|Schlesinger_2020  0.972620     0.974617         0.975633      0.969862  0.974694   8101.0        2.0
+   malignant_level3 kemp_2021|Schlesinger_2020  0.730894     0.886206         0.793312      0.688672  0.892509   2977.0        3.0
+nonmalignant_level3 kemp_2021|Schlesinger_2020  0.688136     0.924219         0.731718      0.681453  0.927986   5124.0       20.0
+    combined_level3 kemp_2021|Schlesinger_2020  0.654556     0.890910         0.708837      0.649864  0.894581   8101.0       23.0
 
 Done. Checkpoints -> src/scpdac/models/classifier/human   |   evaluation -> scripts/eval_outputs/human
 Reading atlas from /data/Daniele/atlases/final_versions_topublish/Mouse.zarr ...
